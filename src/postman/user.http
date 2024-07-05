@@ -1,0 +1,14 @@
+@url_dev=http://localhost:8080
+
+### create user
+
+POST {{url_dev}}/api/user/create-user
+
+{
+  "fullname": "Nguyen Quang Trung",
+  "msv": "a41954",
+  "major": "CNTT",
+  "year": "2024",
+  "password": "a41954"
+  
+}

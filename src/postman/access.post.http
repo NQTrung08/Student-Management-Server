@@ -1,0 +1,12 @@
+
+@url_dev=http://localhost:8080/
+
+
+### Login
+POST {{url_dev}}/api/auth
+
+{ 
+    "name": "Trunknq",
+    "email": "nqtrung12@gmail.com",
+    "password": "12345678ad"
+}
