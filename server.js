@@ -5,7 +5,7 @@ const connect = require("./src/Config/db/index");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const app = express();
-app.use(cors());
+// app.use(cors());
 // app.use((req, res, next) => {
 //   res.header('Access-Control-Allow-Origin', '*');
 //   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
@@ -13,13 +13,8 @@ app.use(cors());
 // })
 app.use(cookieParser());
 
-const port = process.env.PORT;
 app.use(express.json());
-app.use(
-	express.urlencoded({
-		extended: true,
-	})
-);
+app.use(express.urlencoded({ extended: true }));
 
 import { OAuth2Client } from "google-auth-library";
 export const myOAuth2Client = new OAuth2Client(
@@ -34,6 +29,7 @@ myOAuth2Client.setCredentials({
 initRoute(app);
 connect();
 
+const port = process.env.PORT;
 app.listen(port, (err) => {
 	if (err) console.log(err);
 	console.log(`Server listening in port ${port}`);
