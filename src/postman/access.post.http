@@ -1,12 +1,14 @@
 
-@url_dev=http://localhost:8080/
+@url_dev=http://localhost:8080
 
 
 ### Login
-POST {{url_dev}}/api/auth
+POST {{url_dev}}/api/auth/login
+Content-Type: application/json
 
 { 
-    "name": "Trunknq",
-    "email": "nqtrung12@gmail.com",
-    "password": "12345678ad"
+    "msv": "a41954",
+    "password": "a41954"
 }
+
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2OGE3NGU2ZWMxMmE3YjAwZDc3ZmNlMSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTcyMDM0OTk1NCwiZXhwIjoxNzUxODg1OTU0fQ.mlNbbS20rsMbAZg0cUCvF921TPD1QHxyd6rlZvpFqgg

@@ -1,14 +1,26 @@
 @url_dev=http://localhost:8080
 
-### create user
+### create admin
 
-POST {{url_dev}}/api/user/create-user
+POST {{url_dev}}/api/user/create-admin
+Content-Type: application/json
 
 {
-  "fullname": "Nguyen Quang Trung",
   "msv": "a41954",
-  "major": "CNTT",
-  "year": "2024",
   "password": "a41954"
   
 }
+
+
+### Get user
+
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2OGE3NGU2ZWMxMmE3YjAwZDc3ZmNlMSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTcyMDM0OTk1NCwiZXhwIjoxNzUxODg1OTU0fQ.mlNbbS20rsMbAZg0cUCvF921TPD1QHxyd6rlZvpFqgg
+
+GET {{url_dev}}/api/user/getAll
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2OGE3NGU2ZWMxMmE3YjAwZDc3ZmNlMSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTcyMDM1MDY2MywiZXhwIjoxNzIwMzU3ODYzfQ.upIMojlGwhXBqxd0-u18yU2yOeRajVqJsM46G6zn3YM
+
+# "tokens": {
+#     "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2OGE3NGU2ZWMxMmE3YjAwZDc3ZmNlMSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTcyMDM1MDY2MywiZXhwIjoxNzIwMzU3ODYzfQ.upIMojlGwhXBqxd0-u18yU2yOeRajVqJsM46G6zn3YM",
+#     "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2OGE3NGU2ZWMxMmE3YjAwZDc3ZmNlMSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTcyMDM1MDY2MywiZXhwIjoxNzUxODg2NjYzfQ.L3IR7_hNBezUF0eskI7NmI1KVu6YICmMxbmquPzWEss"
+#   }

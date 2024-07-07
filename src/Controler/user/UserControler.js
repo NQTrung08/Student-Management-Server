@@ -1,4 +1,4 @@
-import User from '@/Model/User.model'
+const User = require('../../Model/User.model')
 import Teacher from '../../Model/Teacher.model'
 const Encrypt = require('../../Utils/encryption')
 module.exports = {
@@ -81,6 +81,41 @@ module.exports = {
     }
   },
 
+  createAdmin: async (req, res) => {
+    console.log('Request body:', req.body);
+    const { msv, password } = req.body;
+    const hashPassword = await Encrypt.cryptPassword(password)
+    try {
+        const newAdmin = new User({
+            deleted: false,
+            msv: msv,
+            password: hashPassword,
+            isAdmin: true,
+            // Các trường khác có thể được thêm vào nếu cần
+        });
+
+        console.log(newAdmin);
+
+        // Lưu admin mới vào cơ sở dữ liệu
+        await newAdmin.save();
+
+        // Trả về msv và password trong phản hồi
+        res.status(200).json({ 
+            message: 'Tạo admin thành công', 
+            data: { 
+                user: {
+                    msv: newAdmin.msv,
+                    password: newAdmin.password
+                } 
+            } 
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Lỗi máy chủ', error: err });
+    }
+},
+
+
   deleteUser: async (req, res) => {
     const id = req.params.id
     try {
@@ -120,10 +155,10 @@ module.exports = {
       user.class = data.class
       user.major = data.major
       await user.save();
-      const {password, ...rest} = user._doc
-      res.status(200).json({message: 'Update success', data: rest})
+      const { password, ...rest } = user._doc
+      res.status(200).json({ message: 'Update success', data: rest })
     } catch (error) {
-      res.status(500).json({message: 'Update failed', error: error})
+      res.status(500).json({ message: 'Update failed', error: error })
     }
   },
   updateGv: async (req, res) => {
@@ -133,9 +168,9 @@ module.exports = {
         user.gv.push(gv);
       })
       await user.save();
-      res.status(200).json({message: 'Update success', data: user});
+      res.status(200).json({ message: 'Update success', data: user });
     } catch (error) {
-      res.status(500).json({message: 'error', error: error})
+      res.status(500).json({ message: 'error', error: error })
     }
   }
 }

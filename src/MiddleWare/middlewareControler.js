@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const middlewareControler = {
   verifyToken: (req, res, next) => {
     const token = req.headers.authorization;
+    console.log(token);
   
     if (!token) {
       return res.status(403).json({ message: "Invalid token" });
@@ -32,7 +33,7 @@ const middlewareControler = {
     middlewareControler.verifyToken(req, res, () => {
       if(req.user.isGV) {
         next()
-      } {
+      } else {
         res.status(403).json("You're not allowed")
       }
     })

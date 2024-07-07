@@ -1,15 +1,14 @@
-const mongoose = require("mongoose")
-const Schema = mongoose.Schema
+const { Schema, model, Types } = require('mongoose')
 
 
 const User = new Schema({
   deleted: Boolean,
   gvcn: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Types.ObjectId,
     ref: 'Teacher'
   },
   fullname: String,
-  firstName: String, 
+  firstName: String,
   lastName: String,
   msv: String,
   password: String,
@@ -19,7 +18,7 @@ const User = new Schema({
   isGV: Boolean,
   dob: String,
   phone: String,
-  email: String, 
+  email: String,
   gender: String,
   country: String,
   address: String,
@@ -27,7 +26,7 @@ const User = new Schema({
   courses: [
     {
       course: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Types.ObjectId,
         ref: "Course"
       },
       score: {
@@ -38,13 +37,13 @@ const User = new Schema({
   semesters: [
     {
       semester: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Types.ObjectId,
         ref: "Semester"
       },
       courses: [
         {
           course: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: Types.ObjectId,
             ref: "Course"
           }
         }
@@ -62,4 +61,4 @@ const User = new Schema({
     permanentAddress: String
   }
 })
-module.exports = mongoose.model("User", User)
+module.exports = model("User", User)
