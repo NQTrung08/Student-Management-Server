@@ -17,7 +17,7 @@ const sendEmail = async (email, subject, payload, req, res) => {
       service: 'gmail',
       auth: {
         type: 'OAuth2',
-        user: 'tuanmnguye@gmail.com',
+        user: 'nqtrung0810@gmail.com',
         clientId: process.env.GOOGLE_MAILER_CLIENT_ID,
         clientSecret: process.env.GOOGLE_MAILER_CLIENT_SECRET,
         refresh_token: process.env.GOOGLE_MAILER_REFRESH_TOKEN,
@@ -26,7 +26,7 @@ const sendEmail = async (email, subject, payload, req, res) => {
     })
     const options = () => {
       return {
-        from: 'tuanmnguye@gmail.com',
+        from: 'nqtrung0810@gmail.com',
         to: email,
         subject: subject,
         text: payload
