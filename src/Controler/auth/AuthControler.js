@@ -2,9 +2,14 @@ const jwt = require('jsonwebtoken')
 const generateTokens = require('./generateTokens')
 const User = require('../../Model/User.model')
 const Encrypt = require('../../Utils/encryption')
+
+const { ForbiddenError, ConflictError } = require('../../core/error.response')
+
 import Teacher from '../../Model/Teacher.model'
 import sendEmail from '../../Utils/sendEmail'
 import {generateRandomPassword} from '../../Utils/randomPassword'
+
+
 module.exports = {
   requestRefreshToken: (req, res) => {
     const { refreshToken } = req.body
@@ -14,7 +19,8 @@ module.exports = {
       jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY, (err, user) => {
         if (err) {
           console.log(err)
-          return res.status(403).json({ message: "You're not authenticated" })
+          throw new ForbiddenError("You're not authenticated");
+          // return res.status(403).json({ message: "You're not authenticated" })
         }
         const newAccessToken = generateTokens.generateAccessToken(user)
         const newRefreshToken = generateTokens.generateRefreshToken(user)
@@ -29,7 +35,7 @@ module.exports = {
   login: async (req, res) => {
     const { msv, password, mgv } = req.body;
     let user
-    try {
+    // try {
       if (mgv) {
         user = await Teacher.findOne({ mgv: mgv.toUpperCase() })
         .populate({
@@ -49,7 +55,8 @@ module.exports = {
           })
       }
       if (!user) {
-        return res.status(404).json({ message: 'user not exist' });
+        throw new ConflictError('User not exists')
+        // return res.status(404).json({ message: 'user not exist' });
       }
       const comparePassword = await Encrypt.comparePassword(password, user.password)
       if (comparePassword) {
@@ -61,10 +68,10 @@ module.exports = {
       } else {
         res.status(400).json({ message: 'password is not correct' })
       }
-    } catch (error) {
-      console.log(error)
-      res.status(500).json({ message: 'server error' })
-    }
+    // } catch (error) {
+    //   console.log(error)
+    //   res.status(500).json({ message: 'server error' })
+    // }
   },
 
   changePassword: async (req, res) => {
