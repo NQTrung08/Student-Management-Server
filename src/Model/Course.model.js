@@ -18,10 +18,14 @@ const Course = new Schema({
       enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
     }
   },
-  semester: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Semester'
-  }
+
+  students: [
+    {
+      studentId: { type: Schema.Types.ObjectId, ref: 'User' },
+      gradeId: { type: Schema.Types.ObjectId, ref: 'Grade' }
+    }
+  ]
+
 }, {
   timestamps: true,
   collection: 'courses'

@@ -8,22 +8,6 @@ const TeacherModel = new Schema({
   password: String,
   isGV: Boolean,
   isAdmin: Boolean,
-  class: [
-    {
-      course: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Course"
-      },
-      students: [
-        {
-          student: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User"
-          }
-        }
-      ]
-    }
-  ]
 })
 
 const Teacher = mongoose.model("Teacher", TeacherModel)
