@@ -5,6 +5,7 @@ const SemesterRouter = require('./semesterRouter')
 const TeacherRouter = require('./teacherRouter')
 const RegisterRouter = require('./registerRouter')
 const GradeRouter = require('./gradeRouter')
+const CourseToSemesterRouter = require('./CourseToSemesterRouter')
 const initRoute = (app) => {
   app.use('/api/auth', AuthRouter)
   app.use('/api/user', UserRouter)
@@ -13,6 +14,7 @@ const initRoute = (app) => {
   app.use('/api/teacher', TeacherRouter)
   app.use('/api/register', RegisterRouter)
   app.use('/api/grade', GradeRouter)
+  app.use('/api/CourseToSemester', CourseToSemesterRouter)
 }
 
 module.exports = initRoute
