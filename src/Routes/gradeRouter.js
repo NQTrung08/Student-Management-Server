@@ -7,7 +7,7 @@ const { asyncHandler } = require('../Utils/asyncHandler')
 
 router.get('/getAll', middlewareControler.verifyTokenIsAdminOrGV, asyncHandler(GradeController.getAllGrades))
 router.get('/:id', middlewareControler.verifyToken, asyncHandler(GradeController.getGradeById))
-router.post('/add-grade', middlewareControler.verifyTokenIsAdminOrGV, GradeController.createGrade)
+router.post('/add-grade', middlewareControler.verifyTokenIsAdminOrGV, asyncHandler(GradeController.createGrade))
 // router.post('/update/:id', middlewareControler.verifyTokenIsAdminOrGV, GradeController.updateGrade)
 // router.post('/delete/:id', middlewareControler.verifyTokenIsAdmin, GradeController.deleteGrade)
 

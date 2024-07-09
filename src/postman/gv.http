@@ -1,0 +1,14 @@
+
+@url_dev = http://localhost:8080
+
+
+### create gv
+POST {{url_dev}}/api/teacher/create-teacher
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2OGE3NGU2ZWMxMmE3YjAwZDc3ZmNlMSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTcyMDUxOTUzMCwiZXhwIjoxNzIwNTI2NzMwfQ.6ZfXDz-R2ExCl1lvSfsG3d6ieEuTudMDM9bTCdob8oQ
+
+
+{
+  "mgv": "GV123",
+  "fullname": "Nguyen Van B"
+}

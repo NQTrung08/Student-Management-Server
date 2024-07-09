@@ -1,9 +1,32 @@
 
 @url_dev=http://localhost:8080
 
-### get All Grades
 
-POST {{url_dev}}/api/auth/login
+### get ALL Grades
+
+GET {{url_dev}}/api/grade/getAll
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2OGE3NGU2ZWMxMmE3YjAwZDc3ZmNlMSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTcyMDQyNTY2OCwiZXhwIjoxNzIwNDMyODY4fQ.G0AvOpMwHsuorwpwKaKlnzZJ6Nh0SjqAHy2rLZspt4c
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2OGE3NGU2ZWMxMmE3YjAwZDc3ZmNlMSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTcyMDUzNzIzMiwiZXhwIjoxNzIwNzk2NDMyfQ.c85W0AosmFCnkMzrBL98-sLKraAFJQSqF2r5Ql7BgEU
 
+
+
+### get A Grades
+
+GET {{url_dev}}/api/grade/668d70bfdbd7224cc0e518d2
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2OGE3NGU2ZWMxMmE3YjAwZDc3ZmNlMSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTcyMDUzNzIzMiwiZXhwIjoxNzIwNzk2NDMyfQ.c85W0AosmFCnkMzrBL98-sLKraAFJQSqF2r5Ql7BgEU
+
+
+### create a grade with student
+
+POST {{url_dev}}/api/grade/add-grade
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2OGE3NGU2ZWMxMmE3YjAwZDc3ZmNlMSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTcyMDUzNzIzMiwiZXhwIjoxNzIwNzk2NDMyfQ.c85W0AosmFCnkMzrBL98-sLKraAFJQSqF2r5Ql7BgEU
+
+{
+  "studentId": "",
+  "courseId": "",
+  "semesterId": "",
+  "midScore": 4,
+  "finalScore": 7
+}
