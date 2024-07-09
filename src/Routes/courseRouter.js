@@ -1,5 +1,5 @@
 const router = require("express").Router()
-const CourseControler = require('../Controler/courses/CourseControler')
+const CourseControler = require('../Controller/courses/CourseControler')
 const middlewareControler = require('../MiddleWare/middlewareControler')
 
 router.get('/getAll', middlewareControler.verifyToken, CourseControler.getAllCourse)

@@ -11,7 +11,13 @@ const SemesterModel = new Schema({
   },
   year: {
     type: String
-  }
+  },
+  courses: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Course'
+    }
+  ]
 });
 
 

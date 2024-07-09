@@ -1,5 +1,5 @@
 const router = require("express").Router()
-const UserControler = require('../Controler/user/UserControler')
+const UserControler = require('../Controller/user/UserControler')
 const middlewareControler = require('../MiddleWare/middlewareControler')
 
 const { asyncHandler } = require('../Utils/asyncHandler')
