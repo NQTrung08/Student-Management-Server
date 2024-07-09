@@ -5,25 +5,33 @@ const GradeSchema = new Schema({
   student: {
     type: Schema.Types.ObjectId,
     ref: 'User',
-    required: true
   },
   course: {
     type: Schema.Types.ObjectId,
     ref: 'Course',
-    required: true
   },
   semester: {
     type: Schema.Types.ObjectId,
     ref: 'Semester',
-    required: true
   },
-  score: {
+  midScore: {
     type: Number,
-    required: true
-  }
+  },
+  finalScore: {
+    type: Number,
+  },
+  averageScore: {
+    type: Number,
+  },
+
 }, {
   timestamps: true,
   collection: 'grades'
+});
+
+GradeSchema.pre('save', function(next) {
+  this.averageScore = this.midScore * 0.3 + this.finalScore * 0.7;
+  next();
 });
 
 const Grade = model('Grade', GradeSchema);
