@@ -1,61 +1,66 @@
-const Course = require('../models/Course');
-const Semester = require('../models/Semester');
-const CourseSemester = require('../models/CourseSemester');
+const Course = require('../../Model/Course.model');
+const Semester = require('../../Model/Semester.model');
+const CourseSemester = require('../../Model/CourseSemester.model');
+const { NotFoundError } = require('../../core/error.response');
 
-// Thêm môn học vào kỳ học
-exports.addCourseToSemester = async (req, res) => {
-  const { courseId, semesterId } = req.body;
-  try {
+
+const CourseSemesterController = {
+  // Thêm môn học vào kỳ học
+  addCourseToSemester: async (req, res) => {
+    const { courseId, semesterId } = req.body;
+
+    console.log("csid:", req.body)
     const course = await Course.findById(courseId);
     const semester = await Semester.findById(semesterId);
 
-    if (!course) return res.status(404).json({ message: 'Course not found' });
-    if (!semester) return res.status(404).json({ message: 'Semester not found' });
+    if (!course)
+      throw new NotFoundError('Course not found')
+    if (!semester)
+      throw new NotFoundError('Course not found')
 
-    const courseSemester = new CourseSemester({
+    const courseSemester = await CourseSemester.create({
       courseId: course._id,
       semesterId: semester._id
     });
 
-    await courseSemester.save();
     res.status(201).json(courseSemester);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
 
-// Xóa môn học khỏi kỳ học
-exports.removeCourseFromSemester = async (req, res) => {
-  const { courseId, semesterId } = req.body;
-  try {
+  },
+
+  // Xóa môn học khỏi kỳ học
+  removeCourseFromSemester: async (req, res) => {
+    const { courseId, semesterId } = req.body;
+
     const courseSemester = await CourseSemester.findOneAndDelete({ courseId, semesterId });
-    if (!courseSemester) return res.status(404).json({ message: 'Relation not found' });
+    if (!courseSemester)
+      throw new NotFoundError('Course not found in this semester');
+
     res.json({ message: 'Course removed from semester' });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
 
-// Lấy các môn học theo kỳ học
-exports.getCoursesBySemester = async (req, res) => {
-  const { semesterId } = req.params;
-  try {
+  },
+
+  // Lấy các môn học theo kỳ học
+  getCoursesBySemester: async (req, res) => {
+    const { semesterId } = req.params;
     const courseSemesters = await CourseSemester.find({ semesterId })
-      .populate('courseId');
-    res.json(courseSemesters.map(cs => cs.courseId));
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+      .populate('courseId')
+      // .populate('semesterId');  // chỉ dùng khi có nhiều k�� học cho môn học
 
-// Lấy các kỳ học theo môn học
-exports.getSemestersByCourse = async (req, res) => {
-  const { courseId } = req.params;
-  try {
+    console.log(courseSemesters);
+    res.json(courseSemesters.map(cs => cs.courseId));
+  },
+
+  // Lấy các kỳ học theo môn học
+  getSemestersByCourse: async (req, res) => {
+    const { courseId } = req.params;
     const courseSemesters = await CourseSemester.find({ courseId })
       .populate('semesterId');
+    
+    console.log(courseSemesters);
     res.json(courseSemesters.map(cs => cs.semesterId));
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+
   }
-};
+
+}
+
+module.exports = CourseSemesterController;
