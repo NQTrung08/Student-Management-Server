@@ -5,38 +5,30 @@ module.exports = {
     const { mgv, fullname } = req.body
     const hashPassword = await Encrypt.cryptPassword(mgv)
     try {
-      const existUser = await Teacher.findOne({mgv: mgv})
+      const existUser = await Teacher.findOne({ mgv: mgv })
       if (existUser) {
-        return res.status(400).json({message: "Teacher already exist"});
+        return res.status(400).json({ message: "Teacher already exist" });
       }
-      const newTeacher = new Teacher({
-        mgv: mgv.toUpperCase(), 
-        fullname: fullname, 
+      const newTeacher = await Teacher.create({
+        mgv: mgv,
+        fullname: fullname,
         isAdmin: false,
-        isGV: true, 
+        isGV: true,
         password: hashPassword
       })
-      await newTeacher.save()
       res.status(200).json(newTeacher)
     } catch (e) {
-      res.status(500).json({message: "Error"})
+      res.status(500).json({ message: "Error" })
     }
   },
 
   getAll: async (req, res) => {
     try {
       const data = await Teacher.find({})
-        .populate({
-          path: 'class.course'
-        })
-        .populate({
-          path: 'class.students.student'
-        })
-        .exec();
-        res.status(200).json({data: data})
+      res.status(200).json({ data: data })
     } catch (error) {
       console.log(error);
-      res.status(500).json({message: "Error", error: error})
+      res.status(500).json({ message: "Error", error: error })
     }
   }
 
