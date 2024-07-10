@@ -3,7 +3,7 @@ import Teacher from '../../Model/Teacher.model'
 const Encrypt = require('../../Utils/encryption')
 module.exports = {
   getAllUser: async (req, res) => {
-    // try {
+   
       const users = await User.find({ deleted: false })
         .populate({
           path: 'semesters.semester'
@@ -18,9 +18,7 @@ module.exports = {
         })
         res.status(200).json({ data: data })
       }
-    // } catch (error) {
-    //   res.status(500).json({ message: "Server error" })
-    // }
+   
   },
 
   getUser: async (req, res) => {

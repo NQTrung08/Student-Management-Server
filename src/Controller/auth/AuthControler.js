@@ -14,7 +14,8 @@ module.exports = {
   requestRefreshToken: (req, res) => {
     const { refreshToken } = req.body
     console.log("refreshToken", refreshToken)
-    if (!refreshToken) return res.status(403).json({ message: "Token invalid" })
+    if (!refreshToken)
+      throw new BadRequestError('Invalid refresh token')
     try {
       jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY, (err, user) => {
         if (err) {
