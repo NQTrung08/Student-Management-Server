@@ -1,10 +1,12 @@
-import SemesterControler from "@/Controler/semester/SemesterControler";
-import express from "express";
-const router = express.Router()
+const SemesterController = require('../Controller/semester/SemesterController');
+const express = require("express");
 const middlewareControler = require('../MiddleWare/middlewareControler')
-const RegisterControler = require('../Controler/register/RegisterControler')
+const router = express.Router()
 
-router.get('/getAll', SemesterControler.getAll);
-router.get('/get-semester/:userId/:id', SemesterControler.getSemester);
-router.post('/create', SemesterControler.create)
+const { asyncHandler } = require('../Utils/asyncHandler')
+
+router.get('/getAll',middlewareControler.verifyToken, asyncHandler(SemesterController.getAll))
+router.get('/:id',middlewareControler.verifyToken, asyncHandler(SemesterController.getSemester))
+router.post('/create',middlewareControler.verifyTokenIsAdmin, asyncHandler(SemesterController.create))
+
 module.exports = router

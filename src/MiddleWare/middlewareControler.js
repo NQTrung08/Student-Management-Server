@@ -44,7 +44,19 @@ const middlewareControler = {
         // res.status(403).json("You're not allowed")
       }
     })
+  },
+  
+  verifyTokenIsAdminOrGV: (req, res, next) => {
+    middlewareControler.verifyToken(req, res, () => {
+      if (req.user.isAdmin || req.user.isGV) {
+        next();
+      } else {
+        throw new ForbiddenError("Access denied")
+      }
+    });
   }
+
 }
+
 
 module.exports = middlewareControler

@@ -1,7 +1,7 @@
 const router = require("express").Router()
+const RegisterController = require('../Controller/register/RegisterControler')
 const middlewareControler = require('../MiddleWare/middlewareControler')
-const RegisterControler = require('@/Controler/register/RegisterControler.js')
 
-router.post('/add', middlewareControler.verifyToken, RegisterControler.register);
+router.post('/add', middlewareControler.verifyToken, RegisterController.register);
 
 module.exports = router

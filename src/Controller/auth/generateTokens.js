@@ -9,7 +9,7 @@ module.exports = {
       isGV: user.isGV
     },
       process.env.JWT_ACCESS_KEY,
-      { expiresIn: '2h' }
+      { expiresIn: '3d' }
     )
   },
 

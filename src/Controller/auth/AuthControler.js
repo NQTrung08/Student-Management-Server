@@ -3,11 +3,11 @@ const generateTokens = require('./generateTokens')
 const User = require('../../Model/User.model')
 const Encrypt = require('../../Utils/encryption')
 
-const { ForbiddenError, ConflictError } = require('../../core/error.response')
+const { ForbiddenError, ConflictError, BadRequestError } = require('../../core/error.response')
 
 import Teacher from '../../Model/Teacher.model'
 import sendEmail from '../../Utils/sendEmail'
-import {generateRandomPassword} from '../../Utils/randomPassword'
+import { generateRandomPassword } from '../../Utils/randomPassword'
 
 
 module.exports = {
@@ -33,45 +33,28 @@ module.exports = {
   },
 
   login: async (req, res) => {
-    const { msv, password, mgv } = req.body;
-    let user
-    // try {
-      if (mgv) {
-        user = await Teacher.findOne({ mgv: mgv.toUpperCase() })
-        .populate({
-          path: 'class.course'
-        })
-        .populate({
-          path: 'class.students.student'
-        })
-      }
-      else {
-        user = await User.findOne({ msv: msv })
-          .populate({
-            path: 'semesters.semester'
-          })
-          .populate({
-            path: 'semesters.courses.course'
-          })
-      }
-      if (!user) {
-        throw new ConflictError('User not exists')
-        // return res.status(404).json({ message: 'user not exist' });
-      }
-      const comparePassword = await Encrypt.comparePassword(password, user.password)
-      if (comparePassword) {
-        const accessToken = generateTokens.generateAccessToken(user)
+    const { msv, password } = req.body;
+    let user = await User.findOne({ msv: msv })
+    if (!user) {
+      user = await Teacher.findOne({ mgv: msv })
+    }
+    console.log(user)
 
-        const refreshToken = generateTokens.generateRefreshToken(user)
-        const { password, ...resUser } = user._doc;
-        res.status(200).json({ data: { user: resUser }, tokens: { accessToken, refreshToken }})
-      } else {
-        res.status(400).json({ message: 'password is not correct' })
-      }
-    // } catch (error) {
-    //   console.log(error)
-    //   res.status(500).json({ message: 'server error' })
-    // }
+
+    if (!user) {
+      throw new ConflictError('User not exists')
+      // return res.status(404).json({ message: 'user not exist' });
+    }
+    const comparePassword = await Encrypt.comparePassword(password, user.password)
+    if (comparePassword) {
+      const accessToken = generateTokens.generateAccessToken(user)
+
+      const refreshToken = generateTokens.generateRefreshToken(user)
+      const { password, ...resUser } = user._doc;
+      res.status(200).json({ data: { user: resUser }, tokens: { accessToken, refreshToken } })
+    } else {
+      throw new BadRequestError('Password incorrect')
+    }
   },
 
   changePassword: async (req, res) => {
@@ -84,7 +67,7 @@ module.exports = {
         return;
       }
       const comparePassword = await Encrypt.comparePassword(password, user.password)
-      if(!comparePassword) {
+      if (!comparePassword) {
         return res.status(400).json({ message: 'mật khẩu không chính xác!!' });
       }
       user.password = hashPassword;
@@ -96,9 +79,9 @@ module.exports = {
   },
 
   resetPassword: async (req, res) => {
-    const {msv} = req.body
+    const { msv } = req.body
     try {
-      const user = await User.findOne({msv: msv});
+      const user = await User.findOne({ msv: msv });
       if (!user) {
         res.status(404).json({ message: "user not exist" })
         return;
@@ -107,7 +90,7 @@ module.exports = {
       const hashPassword = await Encrypt.cryptPassword(newPassword)
       user.password = hashPassword;
       user.save();
-      sendEmail(user?.email, 'Reset Password', newPassword , req, res);
+      sendEmail(user?.email, 'Reset Password', newPassword, req, res);
     } catch (e) {
       console.log(e)
       return res.status(500).json(e)

@@ -1,21 +1,20 @@
-const mongoose = require("mongoose")
-const Schema = mongoose.Schema
+const { Schema, model } = require("mongoose")
 
 
-const Course = new Schema({
+const CourseSchema = new Schema({
   deleted: Boolean,
   name: String,
   code: String,
-  className: String,
-  time: {
-    jd: Number,
-    shift: String
+  credit: {
+    type: Number,
   },
-  room: String,
-  tc: Number, 
-  teacher: String
+
+}, {
+  timestamps: true,
+  collection: 'courses'
 })
 
 
+const Course = model("Course", CourseSchema)
 
-module.exports = mongoose.model("Course", Course)
+module.exports = Course
