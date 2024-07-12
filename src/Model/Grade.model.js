@@ -33,6 +33,11 @@ const GradeSchema = new Schema({
     type: Number,
   },
 
+  status: {
+    type: String,
+    enum: ['Pass', 'Fail']
+  }
+
 }, {
   timestamps: true,
   collection: 'grades'
@@ -40,6 +45,7 @@ const GradeSchema = new Schema({
 
 GradeSchema.pre('save', function(next) {
   this.averageScore = this.midScore * 0.3 + this.finalScore * 0.7;
+  this.status = this.averageScore >= 4.0 ? 'Pass' : 'Fail';
   next();
 });
 
