@@ -11,27 +11,30 @@ import { generateRandomPassword } from '../../Utils/randomPassword'
 
 
 module.exports = {
-  requestRefreshToken: (req, res) => {
-    const { refreshToken } = req.body
-    console.log("refreshToken", refreshToken)
-    if (!refreshToken)
-      throw new BadRequestError('Invalid refresh token')
-    try {
-      jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY, (err, user) => {
-        if (err) {
-          console.log(err)
-          throw new ForbiddenError("You're not authenticated");
-          // return res.status(403).json({ message: "You're not authenticated" })
-        }
-        const newAccessToken = generateTokens.generateAccessToken(user)
-        const newRefreshToken = generateTokens.generateRefreshToken(user)
-        res.status(200).json({ tokens: { accessToken: newAccessToken, refreshToken: newRefreshToken } })
-      })
-    } catch (e) {
-      res.status(500).json("server error")
+  requestRefreshToken: async (req, res, next) => {
+    const { refreshToken } = req.body;
+  
+    if (!refreshToken) {
+      return next(new BadRequestError('Refresh token is required'));
     }
-
+  
+    jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY, (err, user) => {
+      if (err) {
+        return next(new ForbiddenError("Invalid refresh token"));
+      }
+  
+      // Tạo mới access token
+      const newAccessToken = generateTokens.generateAccessToken(user);
+  
+      res.status(200).json({
+        tokens: {
+          accessToken: newAccessToken,
+          refreshToken: refreshToken,
+        },
+      });
+    });
   },
+  
 
   login: async (req, res) => {
     const { msv, password } = req.body;
@@ -96,5 +99,12 @@ module.exports = {
       console.log(e)
       return res.status(500).json(e)
     }
+  },
+
+  logout: async (req, res) => {
+    const { refreshToken } = req.body;
+    if (!refreshToken) return res.status(400).json({ message: 'No refresh token provided' });
+    res.status(200).json({ message: 'Successfully logged out' });
+
   }
 }

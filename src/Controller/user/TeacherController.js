@@ -1,5 +1,8 @@
 import Teacher from "../../Model/Teacher.model";
+import { NotFoundError } from "../../core/error.response";
 const Encrypt = require('../../Utils/encryption');
+
+
 module.exports = {
   createTeacher: async (req, res) => {
     const { mgv, fullname } = req.body
@@ -30,7 +33,22 @@ module.exports = {
       console.log(error);
       res.status(500).json({ message: "Error", error: error })
     }
-  }
+  },
+
+  getTeacher: async (req, res) => {
+    const { teacherId } = req.params;
+    console.log(teacherId)
+    try {
+      const teacher = await Teacher.findById(teacherId)
+      if (!teacher) {
+        throw new NotFoundError('Teacher not found')
+      }
+      res.status(200).json({ data: teacher })
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Error", error: error })
+    }
+  },
 
 
 }

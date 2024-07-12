@@ -84,27 +84,24 @@ module.exports = {
     const { msv, password } = req.body;
     const hashPassword = await Encrypt.cryptPassword(password)
     try {
-        const newAdmin = new User({
+        const newAdmin = await User.create({
             deleted: false,
             msv: msv,
             password: hashPassword,
             isAdmin: true,
+            isGV: false,
+            fullname: 'admin'
             // Các trường khác có thể được thêm vào nếu cần
         });
 
         console.log(newAdmin);
-
-        // Lưu admin mới vào cơ sở dữ liệu
-        await newAdmin.save();
-
+        const { password, ...rest } = newAdmin._doc
         // Trả về msv và password trong phản hồi
         res.status(200).json({ 
             message: 'Tạo admin thành công', 
             data: { 
-                user: {
-                    msv: newAdmin.msv,
-                    password: newAdmin.password
-                } 
+                user: rest
+                
             } 
         });
     } catch (err) {
