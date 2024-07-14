@@ -1,5 +1,5 @@
 
-const MajorModel = require('../Model/Major.model')
+const MajorModel = require('../../Model/Major.model')
 
 
 module.exports = {
