@@ -6,8 +6,7 @@ const MajorSchema = Schema({
   code: String,
   student: [{
     type: Schema.Types.ObjectId,
-    ref: 'User',
-    require: true
+    ref: 'User'
   }],
   courses: [{ type: Schema.Types.ObjectId, ref: 'Course' }]
 }, {
