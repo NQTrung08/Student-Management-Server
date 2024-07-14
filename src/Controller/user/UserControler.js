@@ -1,24 +1,26 @@
 const User = require('../../Model/User.model')
 import Teacher from '../../Model/Teacher.model'
+
+const MajorModel = require('../../Model/Major.model')
 const Encrypt = require('../../Utils/encryption')
 module.exports = {
   getAllUser: async (req, res) => {
-   
-      const users = await User.find({ deleted: false })
-        .populate({
-          path: 'semesters.semester'
-        })
-        .populate({
-          path: 'semesters.courses.course'
-        })
-      if (users) {
-        const data = users.map(user => {
-          const { password, ...rest } = user._doc
-          return rest
-        })
-        res.status(200).json({ data: data })
-      }
-   
+
+    const users = await User.find({ deleted: false })
+      .populate({
+        path: 'semesters.semester'
+      })
+      .populate({
+        path: 'semesters.courses.course'
+      })
+    if (users) {
+      const data = users.map(user => {
+        const { password, ...rest } = user._doc
+        return rest
+      })
+      res.status(200).json({ data: data })
+    }
+
   },
 
   getUser: async (req, res) => {
@@ -71,8 +73,12 @@ module.exports = {
         gender: gender,
         email: email,
         majorId: majorId,
-      }
-    ).populate('majorId')
+      })
+
+      // Thêm sinh viên vào chuyên ngành
+      const major = MajorModel.findById(majorId)
+      major.students.push(newUser._id);
+      await major.save();
 
       res.status(200).json({ message: 'Create student success', data: { user: newUser } })
     } catch (err) {
@@ -86,31 +92,31 @@ module.exports = {
     const { msv, password } = req.body;
     const hashPassword = await Encrypt.cryptPassword(password)
     try {
-        const newAdmin = await User.create({
-            deleted: false,
-            msv: msv,
-            password: hashPassword,
-            isAdmin: true,
-            isGV: false,
-            fullname: 'admin'
-            // Các trường khác có thể được thêm vào nếu cần
-        });
+      const newAdmin = await User.create({
+        deleted: false,
+        msv: msv,
+        password: hashPassword,
+        isAdmin: true,
+        isGV: false,
+        fullname: 'admin'
+        // Các trường khác có thể được thêm vào nếu cần
+      });
 
-        console.log(newAdmin);
-        const { password, ...rest } = newAdmin._doc
-        // Trả về msv và password trong phản hồi
-        res.status(200).json({ 
-            message: 'Tạo admin thành công', 
-            data: { 
-                user: rest
-                
-            } 
-        });
+      console.log(newAdmin);
+      const { password, ...rest } = newAdmin._doc
+      // Trả về msv và password trong phản hồi
+      res.status(200).json({
+        message: 'Tạo admin thành công',
+        data: {
+          user: rest
+
+        }
+      });
     } catch (err) {
-        console.log(err);
-        res.status(500).json({ message: 'Lỗi máy chủ', error: err });
+      console.log(err);
+      res.status(500).json({ message: 'Lỗi máy chủ', error: err });
     }
-},
+  },
 
 
   deleteUser: async (req, res) => {
@@ -129,9 +135,11 @@ module.exports = {
   },
 
   updateProfile: async (req, res) => {
+    const { id } = req.params;
     const data = req.body
     try {
-      const user = await User.findById(req.params.id)
+      const oldStudent = await User.findById(id);
+      const user = await User.findById(id).populate('majorId')
       user.parent = {
         fatherName: data.fatherName,
         motherName: data.motherName,
@@ -150,8 +158,18 @@ module.exports = {
       user.phone = data.phone
       user.gender = data.gender
       user.class = data.class
-      user.major = data.major
+      user.majorId = data.majorId
       await user.save();
+
+      // Nếu cần cập nhật danh sách sinh viên trong chuyên ngành cũ và mới
+      if (oldStudent.majorId.toString() !== data.majorId) {
+        // Xóa sinh viên khỏi chuyên ngành cũ
+        await MajorModel.findByIdAndUpdate(oldStudent.majorId, { $pull: { students: id } });
+
+        // Thêm sinh viên vào chuyên ngành mới
+        await MajorModel.findByIdAndUpdate(majorId, { $push: { students: id } });
+      }
+
       const { password, ...rest } = user._doc
       res.status(200).json({ message: 'Update success', data: rest })
     } catch (error) {
