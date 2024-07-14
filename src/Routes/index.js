@@ -6,6 +6,7 @@ const TeacherRouter = require('./teacherRouter')
 const RegisterRouter = require('./registerRouter')
 const GradeRouter = require('./gradeRouter')
 const CourseToSemesterRouter = require('./CourseToSemesterRouter')
+const MajorRouter = require('./majorRouter')
 const initRoute = (app) => {
   app.use('/api/auth', AuthRouter)
   app.use('/api/user', UserRouter)
@@ -14,7 +15,8 @@ const initRoute = (app) => {
   app.use('/api/teacher', TeacherRouter)
   app.use('/api/register', RegisterRouter)
   app.use('/api/grade', GradeRouter)
-  app.use('/api/CourseToSemester', CourseToSemesterRouter)
+  app.use('/api/courseToSemester', CourseToSemesterRouter)
+  app.use('/api/major', MajorRouter)
 }
 
 module.exports = initRoute
