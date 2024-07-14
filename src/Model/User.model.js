@@ -12,7 +12,10 @@ const User = new Schema({
   lastName: String,
   msv: String,
   password: String,
-  major: String,
+  majorId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Major'
+  },
   year: String,
   isAdmin: Boolean,
   isGV: Boolean,

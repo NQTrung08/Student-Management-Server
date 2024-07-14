@@ -20,17 +20,20 @@ module.exports = {
   },
 
   createCourse: async (req, res) => {
-    const { name, code, credit } = req.body
+    const { name, code, credit, majorId } = req.body
       const validCourse = await Course.findOne({ name })
       if (validCourse) {
         throw new BadRequestError('Course already exists')
       }
       const newCourse = await Course.create({
         deleted: false,
-        name,
-        code,
-        credit,
-
+        name: name,
+        code: code,
+        creadit: credit,
+        majorId: majorId
+      })
+      .populate({
+        path: 'majorId'
       })
 
       res.status(200).json({ message: 'Create course success', data: { course: newCourse } })
@@ -51,11 +54,16 @@ module.exports = {
 
   updateCourse: async (req, res) => {
     const id = req.params.id
-    const { name, code, credit } = req.body
+    const { name, code, credit, majorId } = req.body
 
-    const course = await Course.findByIdAndUpdate(id, { $set: { name, code, credit } }, { new: true })
+    const course = await Course.findByIdAndUpdate(
+      id, 
+      { $set: { name, code, credit, majorId } },
+      { new: true }
+    ).populate('majorId')
+
     if (!course) {
-      throw new ConflictError('Cập nhật thất bại')
+      throw new NotFoundError('Course Not Found')
     }
     res.status(200).json({ message: 'Cập nhật thành công', data: course })
 

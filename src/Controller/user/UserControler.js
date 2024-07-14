@@ -44,7 +44,7 @@ module.exports = {
   },
 
   createUser: async (req, res) => {
-    const { fullname, msv, major, year, gvcn, gender, className, email } = req.body
+    const { fullname, msv, major, year, gvcn, gender, className, email, majorId } = req.body
     const hashPassword = await Encrypt.cryptPassword(msv)
     try {
       const validUser = await User.findOne({ msv: msv });
@@ -57,7 +57,7 @@ module.exports = {
         res.status(404).json({ message: "Don't found teacher" })
         return;
       }
-      const newUser = new User({
+      const newUser = await User.create({
         deleted: false,
         msv: msv,
         gvcn: gv._id,
@@ -69,9 +69,11 @@ module.exports = {
         isGV: false,
         class: className,
         gender: gender,
-        email: email
-      })
-      await newUser.save()
+        email: email,
+        majorId: majorId,
+      }
+    ).populate('majorId')
+
       res.status(200).json({ message: 'Create student success', data: { user: newUser } })
     } catch (err) {
       console.log(err)

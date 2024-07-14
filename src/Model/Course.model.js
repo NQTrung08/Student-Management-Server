@@ -8,6 +8,10 @@ const CourseSchema = new Schema({
   credit: {
     type: Number,
   },
+  majorId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Major'
+  }
 
 }, {
   timestamps: true,
