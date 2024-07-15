@@ -31,7 +31,7 @@ module.exports = {
       deleted: false,
       name: name,
       code: code,
-      creadit: credit,
+      credit: credit,
       majorId: majorId
     })
 
@@ -83,9 +83,6 @@ module.exports = {
       // Thêm sinh viên vào chuyên ngành mới
       await MajorModel.findByIdAndUpdate(majorId, { $push: { courses: id } });
     }
-
-
-
 
 
     res.status(200).json({ message: 'Cập nhật thành công', data: course })
