@@ -4,7 +4,7 @@ const { UnauthorizedError, ForbiddenError } = require('../core/error.response')
 const middlewareControler = {
   verifyToken: (req, res, next) => {
     const token = req.headers.authorization;
-    console.log(token);
+    
   
     if (!token) {
      
@@ -29,7 +29,7 @@ const middlewareControler = {
       if(req.user.isAdmin) {
         next()
       } else {
-        throw new ForbiddenError("You're not allowed")
+        throw new UnauthorizedError("You're not allowed")
         // res.status(403).json("You're not allowed")
       }
     })
@@ -40,7 +40,7 @@ const middlewareControler = {
       if(req.user.isGV) {
         next()
       } else {
-        throw new ForbiddenError("You're not allowed")
+        throw new UnauthorizedError("You're not allowed")
         // res.status(403).json("You're not allowed")
       }
     })
@@ -51,7 +51,7 @@ const middlewareControler = {
       if (req.user.isAdmin || req.user.isGV) {
         next();
       } else {
-        throw new ForbiddenError("Access denied")
+        throw new UnauthorizedError("Access denied")
       }
     });
   }

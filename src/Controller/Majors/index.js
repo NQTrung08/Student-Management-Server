@@ -1,5 +1,6 @@
 
 const MajorModel = require('../../Model/Major.model')
+const { BadRequestError } = require('../../core/error.response')
 
 
 module.exports = {
@@ -23,6 +24,10 @@ module.exports = {
   },
   createMajor: async (req, res, next) => {
     const { name, code } = req.body;
+    if(!name || !code) {
+      throw new BadRequestError('Please fill name and code')
+    }
+
     const newMajor = await MajorModel.create({
       name, code
     })
