@@ -27,6 +27,10 @@ module.exports = {
       throw new BadRequestError('Course already exists')
     }
 
+    if (!name || !code || !credit || !majorId) {
+      throw new BadRequestError('Please fill name, code, credit and majorId')
+    }
+
     let newCourse = await Course.create({
       deleted: false,
       name: name,
