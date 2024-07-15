@@ -4,7 +4,7 @@ const { Schema, model } = require('mongoose')
 const MajorSchema = Schema({
   name: String,
   code: String,
-  student: [{
+  students: [{
     type: Schema.Types.ObjectId,
     ref: 'User'
   }],
