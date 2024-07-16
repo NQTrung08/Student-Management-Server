@@ -6,8 +6,9 @@ import { BadRequestError, ConflictError, NotFoundError } from '../../core/error.
 module.exports = {
   getAllCourse: async (req, res) => {
     const courses = await Course.find({})
-    const _courses = courses.filter(item => !item?.deleted);
-    res.status(200).json({ message: "Success", data: _courses })
+    // const _courses = courses.filter(item => !item?.deleted);
+
+    res.status(200).json({ message: "Success", data: courses })
   },
 
   getCourse: async (req, res) => {
@@ -51,16 +52,26 @@ module.exports = {
 
   deleteCourse: async (req, res) => {
     const { id } = req.params
-    const course = await Course.findById(id)
+  
+    // Tìm khóa học theo id
+    const course = await Course.findById(id);
     if (!course) {
-      throw new ConflictError('Delete Failed')
+      throw new ConflictError('Course not found');
     }
-    course.deleted = true;
-    await course.save();
-    res.status(200).json({ message: 'Xóa thành công' })
-
+  
+    // Xóa khóa học
+    await Course.findByIdAndDelete(id);
+  
+    // Tìm chuyên ngành của khóa học để cập nhật danh sách khóa học
+    const major = await MajorModel.findById(course.majorId);
+    if (major) {
+      major.courses = major.courses.filter(courseId => courseId.toString() !== id);
+      await major.save();
+    }
+  
+    res.status(200).json({ message: 'Xóa thành công' });
   },
-
+  
   updateCourse: async (req, res) => {
     const id = req.params.id
     const { name, code, credit, majorId } = req.body
