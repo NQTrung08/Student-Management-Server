@@ -9,7 +9,10 @@ const { NotFoundError, BadRequestError, DeletedError } = require('../../core/err
 module.exports = {
   getAllUser: async (req, res) => {
 
-    const users = await User.find({ deleted: false })
+    const users = await User.find({
+      deleted: false,
+      isAdmin: false
+    })
       .populate({
         path: 'gvcn'
       })
@@ -23,7 +26,7 @@ module.exports = {
         return rest
       })
 
-      
+
       res.status(200).json({ data: data })
     }
 
@@ -66,7 +69,7 @@ module.exports = {
       throw new BadRequestError('Student already exist')
     }
 
-    if(validUser?.deleted) {
+    if (validUser?.deleted) {
       throw new BadRequestError('Student deleted, You want restore student')
     }
 
@@ -203,7 +206,7 @@ module.exports = {
       throw new NotFoundError('Student not found');
     }
 
-    if(oldStudent?.deleted) {
+    if (oldStudent?.deleted) {
       throw new BadRequestError('Student deleted, You want restore student')
     }
 
@@ -283,13 +286,13 @@ module.exports = {
 
   },
 
-  restoreUser: async(req, res) => {
+  restoreUser: async (req, res) => {
     const { id } = req.params
     const user = await User.findById(id)
     if (!user) {
       throw new NotFoundError('Student not found')
     }
-    if(!user?.deleted) {
+    if (!user?.deleted) {
       throw new BadRequestError("Student not deleted")
     }
     user.deleted = false;
