@@ -59,7 +59,7 @@ module.exports = {
     const major = await MajorModel.findById(majorId);
 
 
-    if (validUser && !validUser?.deleted) {
+    if (validUser) {
       throw new BadRequestError('Student already exist')
     }
     if (!gv) {
@@ -191,7 +191,11 @@ module.exports = {
       .populate('gvcn'); // Thêm populate cho gvcn để lấy thông tin giáo viên
 
     if (!oldStudent) {
-      return res.status(404).json({ message: 'Student not found' });
+      throw new NotFoundError('Student not found');
+    }
+
+    if(oldStudent?.deleted) {
+      throw new BadRequestError('Student deleted, You want restore student')
     }
 
     // Kiểm tra tính hợp lệ của gvcn và majorId từ data
@@ -246,7 +250,7 @@ module.exports = {
     }
   },
 
-  searchStudent: async (req, res) => {
+  searchStudents: async (req, res) => {
     const { keyword } = req.query;
 
     console.log(`Searching ${keyword} `)
@@ -269,4 +273,18 @@ module.exports = {
     res.status(200).json({ data: students });
 
   },
+
+  restoreUser: async(req, res) => {
+    const { id } = req.params
+    const user = await User.findById(id)
+    if (!user) {
+      throw new NotFoundError('Student not found')
+    }
+    if(!user?.deleted) {
+      throw new BadRequestError("Student not deleted")
+    }
+    user.deleted = false;
+    await user.save()
+    res.status(200).json({ message: 'Restore student success' })
+  }
 }
