@@ -70,6 +70,12 @@ class ServiceUnavailableError extends ErrorReponse {
   }
 }
 
+class DeletedError extends ErrorReponse {
+  constructor(message = 'Has been deleted', status = 810) {
+    super(message, status);
+  }
+}
+
 module.exports = {
   ConflictError,
   BadRequestError,
@@ -81,4 +87,5 @@ module.exports = {
   UnprocessableEntityError,
   NotImplementedError,
   ServiceUnavailableError,
+  DeletedError,
 };

@@ -3,7 +3,7 @@ const Teacher = require('../../Model/Teacher.model')
 
 const MajorModel = require('../../Model/Major.model')
 const Encrypt = require('../../Utils/encryption')
-const { NotFoundError, BadRequestError } = require('../../core/error.response')
+const { NotFoundError, BadRequestError, DeletedError } = require('../../core/error.response')
 
 
 module.exports = {
@@ -59,9 +59,15 @@ module.exports = {
     const major = await MajorModel.findById(majorId);
 
 
-    if (validUser) {
+    if (validUser && !validUser?.deleted) {
       throw new BadRequestError('Student already exist')
     }
+
+    if(validUser?.deleted) {
+      throw new BadRequestError('Student deleted, You want restore student')
+    }
+
+
     if (!gv) {
       throw new NotFoundError('GV not found')
     }
