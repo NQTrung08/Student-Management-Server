@@ -1,13 +1,14 @@
 const router = require("express").Router()
-const UserControler = require('../Controller/user/UserControler')
+const UserController = require('../Controller/user/UserController')
 const middlewareControler = require('../MiddleWare/middlewareControler')
 
 const { asyncHandler } = require('../Utils/asyncHandler')
 
-router.get('/getAll',middlewareControler.verifyTokenIsAdmin, asyncHandler(UserControler.getAllUser))
-router.get('/:id', middlewareControler.verifyToken, UserControler.getUser)
-router.post('/create-user', middlewareControler.verifyTokenIsAdmin, UserControler.createUser)
-router.post('/create-admin', UserControler.createAdmin)
-router.post('/delete/:id', middlewareControler.verifyTokenIsAdmin, UserControler.deleteUser)
-router.post('/update-profile/:id', middlewareControler.verifyToken, UserControler.updateProfile)
+router.get('/getAll',middlewareControler.verifyTokenIsAdmin, asyncHandler(UserController.getAllUser))
+router.get('/:id', middlewareControler.verifyToken, UserController.getUser)
+router.post('/searchStudents', middlewareControler.verifyTokenIsAdminOrGV, asyncHandler(UserController.searchStudent));
+router.post('/create-user', middlewareControler.verifyTokenIsAdmin, asyncHandler(UserController.createUser))
+router.post('/create-admin', UserController.createAdmin)
+router.post('/delete/:id', middlewareControler.verifyTokenIsAdmin, UserController.deleteUser)
+router.post('/update-profile/:id', middlewareControler.verifyToken, UserController.updateProfile)
 module.exports = router

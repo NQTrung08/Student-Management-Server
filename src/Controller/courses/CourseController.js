@@ -5,9 +5,11 @@ const MajorModel = require('../../Model/Major.model')
 import { BadRequestError, ConflictError, NotFoundError } from '../../core/error.response'
 module.exports = {
   getAllCourse: async (req, res) => {
-    const courses = await Course.find({})
-    // const _courses = courses.filter(item => !item?.deleted);
+    const courses = await Course.find({}).populate('majorId')
 
+
+    // const _courses = courses.filter(item => !item?.deleted);
+    // console.log(courses);
     res.status(200).json({ message: "Success", data: courses })
   },
 
@@ -41,9 +43,10 @@ module.exports = {
     })
 
     const major = await MajorModel.findById(majorId)
-    await major.students.push(newCourse._id)
+    await major.courses.push(newCourse._id)
+    await major.save(); 
 
-    // Populate thông tin chuyên ngành cho sinh viên mới
+    // Populate thông tin chuyên ngành khóa học mới
     newCourse = await Course.findById(newCourse._id).populate('majorId');
 
     res.status(200).json({ message: 'Create course success', data: { course: newCourse } })
@@ -78,6 +81,11 @@ module.exports = {
 
     // Tìm khóa học trước khi cập nhật để kiểm tra chuyên ngành cũ
     const oldCourse = await Course.findById(id);
+    // tìm chuyên ngành xem có tồn tại không
+    const major = await MajorModel.findById(majorId);
+    if (!major) {
+      throw new NotFoundError('Major not found');
+    }
 
     if (!oldCourse) {
       throw new NotFoundError('Student not found');

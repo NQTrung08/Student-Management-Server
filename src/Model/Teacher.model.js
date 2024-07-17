@@ -1,5 +1,4 @@
-import mongoose from "mongoose"
-const Schema = mongoose.Schema
+const { Schema, model } = require('mongoose')
 
 
 const TeacherModel = new Schema({
@@ -10,5 +9,5 @@ const TeacherModel = new Schema({
   isAdmin: Boolean,
 })
 
-const Teacher = mongoose.model("Teacher", TeacherModel)
-export default Teacher
+const Teacher = model("Teacher", TeacherModel)
+module.exports =  Teacher

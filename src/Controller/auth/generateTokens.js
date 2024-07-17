@@ -9,7 +9,7 @@ module.exports = {
       isGV: user.isGV
     },
       process.env.JWT_ACCESS_KEY,
-      { expiresIn: '3d' }
+      { expiresIn: '1d' }
     )
   },
 
@@ -20,7 +20,7 @@ module.exports = {
       isGV: user.isGV
     },
       process.env.JWT_REFRESH_KEY,
-      { expiresIn: '365d' }
+      { expiresIn: '3d' }
     )
   }
 }

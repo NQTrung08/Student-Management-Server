@@ -1,8 +1,11 @@
 const User = require('../../Model/User.model')
-import Teacher from '../../Model/Teacher.model'
+const Teacher = require('../../Model/Teacher.model')
 
 const MajorModel = require('../../Model/Major.model')
 const Encrypt = require('../../Utils/encryption')
+const { NotFoundError, BadRequestError } = require('../../core/error.response')
+
+
 module.exports = {
   getAllUser: async (req, res) => {
 
@@ -46,45 +49,52 @@ module.exports = {
   },
 
   createUser: async (req, res) => {
-    const { fullname, msv, major, year, gvcn, gender, className, email, majorId } = req.body
+    const { fullname, msv, year, gvcn, gender, className, email, majorId } = req.body
     const hashPassword = await Encrypt.cryptPassword(msv)
-    try {
-      const validUser = await User.findOne({ msv: msv });
-      const gv = await Teacher.findOne({ mgv: gvcn });
-      if (validUser && !validUser?.deleted) {
-        res.status(400).json({ message: 'Student already exists' })
-        return;
-      }
-      if (!gv) {
-        res.status(404).json({ message: "Don't found teacher" })
-        return;
-      }
-      const newUser = await User.create({
-        deleted: false,
-        msv: msv,
-        gvcn: gv._id,
-        fullname: fullname,
-        password: hashPassword,
-        major: major,
-        year: year,
-        isAdmin: false,
-        isGV: false,
-        class: className,
-        gender: gender,
-        email: email,
-        majorId: majorId,
-      })
 
-      // Thêm sinh viên vào chuyên ngành
-      const major = MajorModel.findById(majorId)
-      major.students.push(newUser._id);
-      await major.save();
+    const validUser = await User.findOne({ msv: msv });
+    
+    const gv = await Teacher.findOne({ mgv: gvcn });
 
-      res.status(200).json({ message: 'Create student success', data: { user: newUser } })
-    } catch (err) {
-      console.log(err)
-      res.status(500).json({ message: 'Server error', error: err })
+    const major = await MajorModel.findById(majorId);
+
+
+    if (validUser && !validUser?.deleted) {
+      throw new BadRequestError('Student already exist')
     }
+    if (!gv) {
+      throw new NotFoundError('GV not found')
+    }
+
+    if (!major) {
+      throw new NotFoundError('Major not found')
+    }
+
+
+    let newUser = await User.create({
+      deleted: false,
+      msv: msv,
+      gvcn: gv._id,
+      fullname: fullname,
+      password: hashPassword,
+      year: year,
+      isAdmin: false,
+      isGV: false,
+      class: className,
+      gender: gender,
+      email: email,
+      majorId: majorId,
+    })
+
+    // Thêm sinh viên vào chuyên ngành
+    await major.students.push(newUser._id);
+    await major.save();
+
+    // Populate thông tin chuyên ngành cho sinh viên mới
+    newUser = await User.findById(newUser._id).populate('majorId');
+
+    res.status(200).json({ message: 'Create student success', data: { user: newUser } })
+
   },
 
   createAdmin: async (req, res) => {
@@ -187,5 +197,29 @@ module.exports = {
     } catch (error) {
       res.status(500).json({ message: 'error', error: error })
     }
-  }
+  },
+
+  searchStudent: async (req, res) => {
+    const { keyword } = req.query;
+
+    console.log(`Searching ${keyword} `)
+
+    const students = await User.find({
+      $or: [
+        { msv: { $regex: keyword, $options: 'i' } },
+        { fullname: { $regex: keyword, $options: 'i' } },
+        { email: { $regex: keyword, $options: 'i' } },
+        { phone: { $regex: keyword, $options: 'i' } },
+        { class: { $regex: keyword, $options: 'i' } },
+        { major: { $regex: keyword, $options: 'i' } },
+      ],
+      deleted: false,
+      isAdmin: false,
+    })
+    if (!students) {
+      throw new NotFoundError('No students found');
+    }
+    res.status(200).json({ data: students });
+
+  },
 }
