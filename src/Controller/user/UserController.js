@@ -11,16 +11,19 @@ module.exports = {
 
     const users = await User.find({ deleted: false })
       .populate({
-        path: 'semesters.semester'
+        path: 'gvcn'
       })
       .populate({
-        path: 'semesters.courses.course'
+        path: 'majorId'
       })
+
     if (users) {
       const data = users.map(user => {
         const { password, ...rest } = user._doc
         return rest
       })
+
+      
       res.status(200).json({ data: data })
     }
 
@@ -31,10 +34,10 @@ module.exports = {
     try {
       const user = await User.findById(id)
         .populate({
-          path: 'semesters.semester'
+          path: 'gvcn'
         })
         .populate({
-          path: 'semesters.courses.course'
+          path: 'majorId'
         })
       if (!user) return res.status(404).json({ message: "User not found" })
       if (user.deleted) {
