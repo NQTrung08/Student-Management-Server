@@ -12,7 +12,7 @@ router.post('/create-admin', UserController.createAdmin)
 router.delete('/delete/:id', middlewareControler.verifyTokenIsAdmin, asyncHandler(UserController.deleteUser))
 router.put('/updateProfile/:id', middlewareControler.verifyToken, asyncHandler(UserController.updateProfile))
 router.put('/updateByAdmin/:id', middlewareControler.verifyTokenIsAdmin, asyncHandler(UserController.updateStudentByAdmin))
-router.put('/restore/:id', middlewareControler.verifyTokenIsAdmin, asyncHandler(UserController.restoreUser));
+router.put('/restore', middlewareControler.verifyTokenIsAdmin, asyncHandler(UserController.restoreUser));
 
 
 module.exports = router

@@ -287,8 +287,8 @@ module.exports = {
   },
 
   restoreUser: async (req, res) => {
-    const { id } = req.params
-    const user = await User.findById(id)
+    const { msv } = req.body
+    const user = await User.find(msv)
     if (!user) {
       throw new NotFoundError('Student not found')
     }
