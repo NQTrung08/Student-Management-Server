@@ -2,23 +2,23 @@
 const { Schema, model} = require('mongoose');
 
 const GradeSchema = new Schema({
-  student: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    require: true
-  },
+  // student: {
+  //   type: Schema.Types.ObjectId,
+  //   ref: 'User',
+  //   require: true
+  // },
   course: {
     type: Schema.Types.ObjectId,
     ref: 'Course',
     require: true
 
   },
-  semester: {
-    type: Schema.Types.ObjectId,
-    ref: 'Semester',
-    require: true
+  // semester: {
+  //   type: Schema.Types.ObjectId,
+  //   ref: 'Semester',
+  //   require: true
 
-  },
+  // },
   midScore: {
     type: Number,
     require: true
@@ -36,6 +36,13 @@ const GradeSchema = new Schema({
   status: {
     type: String,
     enum: ['Pass', 'Fail']
+  },
+
+  transcript: {
+    type: Schema.Types.ObjectId,
+    ref: 'Transcript',
+    require: true,
+    // index: true
   }
 
 }, {

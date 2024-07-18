@@ -1,5 +1,8 @@
 
+const Course = require('../../Model/Course.model');
 const Grade = require('../../Model/Grade.model');
+const Transcript = require('../../Model/Transcript.model');
+const UserModel = require('../../Model/User.model');
 const { BadRequestError, NotFoundError } = require('../../core/error.response')
 
 
@@ -12,9 +15,9 @@ module.exports = {
       .populate({
         path: 'course',
       })
-      .populate({
-        path: 'semester',
-      })
+      // .populate({
+      //   path: 'semester',
+      // })
 
     console.log(grades);
 
@@ -52,35 +55,43 @@ module.exports = {
   },
 
   createGrade: async (req, res) => {
-    const { studentId, courseId, semesterId, midScore, finalScore } = req.body;
+    const { courseId, midScore, finalScore, transcriptId } = req.body;
 
 
-    // if (!studentId || !courseId || !semesterId || midScore === undefined || finalScore === undefined) {
-    //   return res.status(400).json({ message: 'Missing required fields' });
-    // }
-
-    // // Kiểm tra xem điểm giữa kỳ và điểm cuối kỳ có hợp lệ không
-    // if (typeof midScore !== 'number' || typeof finalScore !== 'number') {
-    //   return res.status(400).json({ message: 'Scores must be numbers' });
-    // }
-
-    if (midScore < 4 || midScore > 10) {
-      throw new Error('Invalid midScore, value between 4 and 10');
+    if (midScore < 0 || midScore > 10) {
+      throw new Error('Invalid midScore, value between 0 and 10');
     }
 
     if (finalScore < 0 || finalScore > 10) {
       throw new Error('Invalid finalScore, value between 0 and 10');
     }
 
-    const existingGrade = await Grade.findOne({ studentId, courseId, semesterId });
+    const transcript = await Transcript.findById(transcriptId)
+    if (!transcript) {
+      throw new NotFoundError('Transcript not found')
+    }
+
+    const course = await Course.findById(courseId);
+    if (!course) {
+      throw new NotFoundError('Course not found')
+    }
+
+    const existingGrade = await Grade.findOne({ courseId });
 
     if (existingGrade) {
       throw new BadRequestError('Grade already exists for this semester')
     }
 
-    const newGrade = await Grade.create({ studentId, courseId, semesterId, midScore, finalScore });
+    const newGrade = await Grade.create({ course: courseId, midScore, finalScore, transcript: transcriptId });
 
-    res.status(201).json(newGrade);
+    // sau khi create Thì push vào transcript theo id
+    transcript.grades.push(newGrade._id);
+    await transcript.save();
+
+   
+    res.status(201).json({message: "Create successfully ", data: newGrade});
+
+
 
   },
 
@@ -98,38 +109,49 @@ module.exports = {
     res.status(201).json(updateGrade);
   },
 
-  getAllSubjectForStudent: async (req, res) => {
-    const studentId = req.params.id;
+  deleteGrade: async (req, res) => {
+    const { gradeId } = req.params;
+    const grade = await Grade.findByIdAndDelete(gradeId);
 
-    const grades = await Grade.find({ studentId })
-     .populate({
-        path: 'course',
-      })
-     .populate({
-        path:'semester',
-      })
-
-    if (!grades) {
-      throw new NotFoundError('No grades found for this student')
+    if (!grade) {
+      throw new NotFoundError('Grade not found')
     }
 
-    res.status(200).json({ grades });
+    res.status(200).json({ message: "Grade deleted successfully" });
   },
 
-  getGradeInSemester: async(req, res) => {
-    const { studentId, semesterId } = req.params;
+  // getAllSubjectForStudent: async (req, res) => {
+  //   const studentId = req.params.id;
 
-    const grades = await Grade.find({ studentId, semesterId })
-     .populate({
-        path: 'course',
-      })
+  //   const grades = await Grade.find({ studentId })
+  //    .populate({
+  //       path: 'course',
+  //     })
+  //    .populate({
+  //       path:'semester',
+  //     })
 
-    if (!grades) {
-      throw new NotFoundError('No grades found for this student in this semester')
-    }
+  //   if (!grades) {
+  //     throw new NotFoundError('No grades found for this student')
+  //   }
 
-    res.status(200).json({ grades });
-  }
+  //   res.status(200).json({ grades });
+  // },
+
+  // getGradeInSemester: async(req, res) => {
+  //   const { studentId, semesterId } = req.params;
+
+  //   const grades = await Grade.find({ studentId, semesterId })
+  //    .populate({
+  //       path: 'course',
+  //     })
+
+  //   if (!grades) {
+  //     throw new NotFoundError('No grades found for this student in this semester')
+  //   }
+
+  //   res.status(200).json({ grades });
+  // }
 
 
 

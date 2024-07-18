@@ -90,7 +90,7 @@ const TranscriptController = {
 
   getTranscriptByStudent: async (req, res) => {
     const { studentId } = req.params;
-    const transcript = await Transcript.find({ studentId })
+    const transcript = await Transcript.find({ student: studentId })
       .populate({
         path: 'grades',
         populate: {
