@@ -288,11 +288,16 @@ module.exports = {
 
   restoreUser: async (req, res) => {
     const { msv } = req.body
-    const user = await User.find({msv: msv})
+    const user = await User.findOne({msv: msv})
+
+    // console.log(user)
+    // console.log(user.email)
+
+
     if (!user) {
       throw new NotFoundError('Student not found')
     }
-    if (!user?.deleted) {
+    if (user.deleted) {
       throw new BadRequestError("Student not deleted")
     }
     user.deleted = false;
