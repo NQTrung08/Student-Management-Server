@@ -60,7 +60,7 @@ module.exports = {
 
     const validUser = await User.findOne({ msv: msv });
 
-    const gv = await Teacher.findOne({ mgv: gvcn });
+    const teacher = await Teacher.findById(gvcn);
 
     const major = await MajorModel.findById(majorId);
 
@@ -74,7 +74,7 @@ module.exports = {
     }
 
 
-    if (!gv) {
+    if (!teacher) {
       throw new NotFoundError('GV not found')
     }
 
@@ -86,7 +86,7 @@ module.exports = {
     let newUser = await User.create({
       deleted: false,
       msv: msv,
-      gvcn: gv._id,
+      gvcn: gvcn,
       fullname: fullname,
       password: hashPassword,
       year: year,
