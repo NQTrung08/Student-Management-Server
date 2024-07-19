@@ -4,6 +4,7 @@ const Teacher = require('../../Model/Teacher.model')
 const MajorModel = require('../../Model/Major.model')
 const Encrypt = require('../../Utils/encryption')
 const { NotFoundError, BadRequestError, DeletedError } = require('../../core/error.response')
+const Transcript = require('../../Model/Transcript.model')
 
 
 module.exports = {
@@ -149,6 +150,11 @@ module.exports = {
     }
     user.deleted = true;
     await user.save()
+
+    // Cập nhật tất cả các transcript có studentId tương ứng
+    await Transcript.updateMany({ student: id }, { deleted: true });
+
+
     res.status(200).json({ message: 'Delete student success' })
   },
 
@@ -290,14 +296,14 @@ module.exports = {
     const { msv } = req.body
     const user = await User.findOne({msv: msv})
 
-    // console.log(user)
-    // console.log(user.email)
+    console.log(user)
+    console.log(user.deleted)
 
 
     if (!user) {
       throw new NotFoundError('Student not found')
     }
-    if (user.deleted) {
+    if (!user.deleted) {
       throw new BadRequestError("Student not deleted")
     }
     user.deleted = false;

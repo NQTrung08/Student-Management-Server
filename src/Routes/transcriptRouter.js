@@ -12,6 +12,8 @@ router.get('/:id', middleWareController.verifyToken, asyncHandler(TranscriptCont
 router.post('/create', middleWareController.verifyTokenIsAdminOrGV, asyncHandler(TranscriptController.createTranscript))
 router.put('/update/:id', middleWareController.verifyTokenIsAdminOrGV, asyncHandler(TranscriptController.updateTranscript))
 router.delete('/delete/:id', middleWareController.verifyTokenIsAdminOrGV, asyncHandler(TranscriptController.deleteTranscript))
+router.put('/restore', middleWareController.verifyTokenIsAdminOrGV, asyncHandler(TranscriptController.restoreTranscript))
+
 
 router.get('/student/:studentId', middleWareController.verifyTokenIsAdminOrGV, asyncHandler(TranscriptController.getTranscriptByStudent))
 router.get('/student/:studentId/semester/:semesterId', middleWareController.verifyTokenIsAdminOrGV, asyncHandler(TranscriptController.getTranscriptBySemester))

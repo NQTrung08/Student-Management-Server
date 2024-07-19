@@ -2,7 +2,10 @@ const { Schema, model } = require('mongoose')
 
 
 const User = new Schema({
-  deleted: Boolean,
+  deleted: {
+    type: Boolean,
+    default: false
+  },
   gvcn: {
     type: Schema.Types.ObjectId,
     ref: 'Teacher'

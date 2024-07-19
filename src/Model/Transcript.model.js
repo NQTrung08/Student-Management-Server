@@ -14,7 +14,13 @@ const TranscriptSchema = new Schema({
   grades: [{
     type: Schema.Types.ObjectId,
     ref: 'Grade'
-  }]
+  }],
+
+  deleted: {
+    type: Boolean,
+    default: false,
+    required: true
+  },
 }, {
   timestamps: true,
   collection: 'transcripts'
