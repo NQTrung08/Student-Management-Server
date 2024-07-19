@@ -117,6 +117,13 @@ module.exports = {
       throw new NotFoundError('Grade not found')
     }
 
+    // Cập nhật transcript để gỡ bỏ grade khỏi mảng grades
+    await Transcript.updateOne(
+      { _id: grade.transcript },
+      { $pull: { grades: gradeId } }
+    );
+
+
     res.status(200).json({ message: "Grade deleted successfully" });
   },
 

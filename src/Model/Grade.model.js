@@ -1,4 +1,3 @@
-// models/Grade.js
 const { Schema, model} = require('mongoose');
 
 const GradeSchema = new Schema({
