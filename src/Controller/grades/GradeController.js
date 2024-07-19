@@ -76,6 +76,11 @@ module.exports = {
       throw new NotFoundError('Course not found')
     }
 
+    const existCourse = await Grade.findOne({course: courseId, transcript: transcriptId})
+    if (existCourse) {
+      throw new BadRequestError('Grade already exists for this course')
+    }
+
     const existingGrade = await Grade.findOne({ courseId });
 
     if (existingGrade) {
