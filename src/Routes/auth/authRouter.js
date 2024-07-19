@@ -1,13 +1,17 @@
-const router = require("express").Router()
-const AuthControler = require('../../Controller/auth/AuthControler')
+
+const express = require('express')
+const router = express.Router()
+
+const AuthController = require('../../Controller/auth/AuthController')
 const middlewareControler = require('../../MiddleWare/middlewareControler')
 const { asyncHandler } = require('../../Utils/asyncHandler')
 
 
-router.post('/login', asyncHandler(AuthControler.login))
-router.post('/refresh', asyncHandler(AuthControler.requestRefreshToken))
-router.post('/change-password', middlewareControler.verifyToken, AuthControler.changePassword)
+router.post('/login', asyncHandler(AuthController.login))
+router.post('/refresh', asyncHandler(AuthController.requestRefreshToken));
 
-router.post('/reset-password', AuthControler.resetPassword)
+// router.post('/change-password', middlewareControler.verifyToken, AuthControler.changePassword)
+
+// router.post('/reset-password', AuthControler.resetPassword)
 
 module.exports = router

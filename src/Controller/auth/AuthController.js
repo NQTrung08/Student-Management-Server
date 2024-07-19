@@ -10,22 +10,26 @@ import sendEmail from '../../Utils/sendEmail'
 import { generateRandomPassword } from '../../Utils/randomPassword'
 
 
-module.exports = {
-  requestRefreshToken: async (req, res, next) => {
+const AuthController = {
+
+  requestRefreshToken: async (req, res) => {
     const { refreshToken } = req.body;
-  
     if (!refreshToken) {
-      return next(new BadRequestError('Refresh token is required'));
+      return res.status(400).json({ message: 'Refresh token is required' });
     }
-  
-    jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY, (err, user) => {
+
+    console.log('Received refresh token:', refreshToken);
+
+    jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY, (err, decoded) => {
       if (err) {
-        return next(new ForbiddenError("Invalid refresh token"));
+        return res.status(403).json({ message: "Invalid refresh token" });
       }
-  
+
+      console.log('Decoded token:', decoded);
+
       // Tạo mới access token
-      const newAccessToken = generateTokens.generateAccessToken(user);
-  
+      const newAccessToken = generateTokens.generateAccessToken(decoded);
+
       res.status(200).json({
         tokens: {
           accessToken: newAccessToken,
@@ -34,7 +38,8 @@ module.exports = {
       });
     });
   },
-  
+
+
 
   login: async (req, res) => {
     const { msv, password } = req.body;
@@ -108,3 +113,5 @@ module.exports = {
 
   }
 }
+
+module.exports = AuthController;

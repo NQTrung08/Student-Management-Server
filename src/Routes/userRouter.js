@@ -4,7 +4,7 @@ const middlewareControler = require('../MiddleWare/middlewareControler')
 
 const { asyncHandler } = require('../Utils/asyncHandler')
 
-router.get('/getAll',middlewareControler.verifyTokenIsAdmin, asyncHandler(UserController.getAllUser))
+router.get('/getAll',middlewareControler.verifyTokenIsAdminOrGV, asyncHandler(UserController.getAllUser))
 router.get('/:id', middlewareControler.verifyToken, UserController.getUser)
 router.post('/searchStudents', middlewareControler.verifyTokenIsAdminOrGV, asyncHandler(UserController.searchStudents));
 router.post('/create-user', middlewareControler.verifyTokenIsAdmin, asyncHandler(UserController.createUser))
