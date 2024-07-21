@@ -256,34 +256,102 @@ module.exports = {
     }
   },
 
+  // searchStudents: async (req, res) => {
+  //   const { keyword } = req.query;
+
+  //   console.log(`Searching ${keyword} `)
+
+  //   const students = await User.find({
+  //     $or: [
+  //       { msv: { $regex: keyword, $options: 'i' } },
+  //       { fullname: { $regex: keyword, $options: 'i' } },
+  //       { email: { $regex: keyword, $options: 'i' } },
+  //       { phone: { $regex: keyword, $options: 'i' } },
+  //       { class: { $regex: keyword, $options: 'i' } },
+  //     ],
+  //     deleted: false,
+  //     isAdmin: false,
+  //   })
+  //     .populate({
+  //       path: 'majorId',
+  //       select: 'name',
+  //       match: { name: { $regex: keyword, $options: 'i' } }
+  //     })
+  //     .collation({ locale: 'vi', strength: 1 })
+
+  //   if (!students) {
+  //     throw new NotFoundError('No students found');
+  //   }
+  //   res.status(200).json({ data: students });
+
+  // },
+
   searchStudents: async (req, res) => {
-    const { keyword } = req.query;
+    let { keyword } = req.query;
+    
+    // Bỏ khoảng trắng ở đầu và cuối từ khóa
+    keyword = keyword.trim();
 
-    console.log(`Searching ${keyword} `)
+    console.log(`Searching ${keyword}`);
 
-    const students = await User.find({
+    // Tìm kiếm các majors phù hợp với keyword
+    const majors = await MajorModel.find({
+      name: { $regex: keyword, $options: 'i' }
+    }).select('_id');
+
+    // Lấy danh sách các majorId phù hợp
+    const majorIds = majors.map(major => major._id);
+
+    // Tìm kiếm các sinh viên phù hợp với keyword trong các trường của User
+    const studentsByKeyword = await User.find({
       $or: [
         { msv: { $regex: keyword, $options: 'i' } },
         { fullname: { $regex: keyword, $options: 'i' } },
         { email: { $regex: keyword, $options: 'i' } },
         { phone: { $regex: keyword, $options: 'i' } },
         { class: { $regex: keyword, $options: 'i' } },
-        { major: { $regex: keyword, $options: 'i' } },
       ],
       deleted: false,
       isAdmin: false,
-    }).collation({ locale: 'vi', strength: 1})
-    
-    if (!students) {
+    }).populate({
+        path: 'majorId',
+        select: 'name'
+    }).collation({ locale: 'vi', strength: 1 });
+
+    console.log("student by key: ", studentsByKeyword);
+    console.log("-----------------------------------");
+
+    // Tìm kiếm các sinh viên theo majorId
+    const studentsByMajor = await User.find({
+      majorId: { $in: majorIds },
+      deleted: false,
+      isAdmin: false,
+    }).populate({
+        path: 'majorId',
+        select: 'name'
+    }).collation({ locale: 'vi', strength: 1 });
+
+    console.log(studentsByMajor);
+
+    // Kết hợp kết quả từ cả hai truy vấn
+    const students = [...studentsByKeyword, ...studentsByMajor];
+
+    // Loại bỏ các sinh viên trùng lặp
+    const uniqueStudents = students.filter((student, index, self) => 
+      index === self.findIndex((s) => s._id.toString() === student._id.toString())
+    );
+
+    if (uniqueStudents.length === 0) {
       throw new NotFoundError('No students found');
     }
-    res.status(200).json({ data: students });
 
+    res.status(200).json({ data: uniqueStudents });
   },
+
 
   restoreUser: async (req, res) => {
     const { msv } = req.body
-    const user = await User.findOne({msv: msv})
+    const user = await User.findOne({ msv: msv })
 
     console.log(user)
     console.log(user.deleted)

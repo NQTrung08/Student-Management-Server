@@ -229,7 +229,35 @@ const TranscriptController = {
 
     res.status(200).json({ message: "Transcript restored", data: transcript });
 
-  }
+  },
+
+  searchTranscripts: async (req, res) => {
+    const { keyword } = req.query;
+    const transcripts = await Transcript.find({
+      $or: [
+        { msv: { $regex: keyword, $options: 'i' } },
+        { fullname: { $regex: keyword, $options: 'i' } },
+      ],
+      deleted: false,
+     })
+     .populate({
+        path:'student',
+        populate: {
+          path:'majorId',
+          select: 'name'
+        }
+      })
+     .populate({
+        path:'semester'
+      })
+     .exec();
+
+    if (!transcripts) {
+      throw new NotFoundError('No transcript found');
+    }
+
+    res.status(200).json({ data: transcripts });
+  },
 
 }
 
