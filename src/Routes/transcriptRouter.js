@@ -15,8 +15,8 @@ router.delete('/delete/:id', middleWareController.verifyTokenIsAdminOrGV, asyncH
 router.put('/restore', middleWareController.verifyTokenIsAdminOrGV, asyncHandler(TranscriptController.restoreTranscript))
 
 
-router.get('/student/:studentId', middleWareController.verifyToken, asyncHandler(TranscriptController.getTranscriptByStudent))
 router.get('/student/:studentId/semester/:semesterId', middleWareController.verifyToken, asyncHandler(TranscriptController.getTranscriptBySemester))
+router.get('/student/:studentId', middleWareController.verifyToken, asyncHandler(TranscriptController.getTranscriptByStudent))
 
 
 module.exports = router

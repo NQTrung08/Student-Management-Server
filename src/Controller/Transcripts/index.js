@@ -186,7 +186,7 @@ const TranscriptController = {
     }
 
 
-    const transcript = await Transcript.find({ studentId, semesterId })
+    const transcripts = await Transcript.find({ student: studentId, semester: semesterId })
       .populate({
         path: 'grades',
         populate: {
@@ -196,11 +196,20 @@ const TranscriptController = {
       })
       .exec()
 
-    if (!transcript) {
+    if (!transcripts) {
       throw new NotFoundError('No transcript found for this student in this semester')
     }
 
-    res.status(200).json({ data: transcript })
+    // Tổ chức dữ liệu lại cho frontend
+    const allGrades = transcripts.flatMap(transcript => transcript.grades.map(grade => ({
+      course: grade.course.name,
+      midScore: grade.midScore,
+      finalScore: grade.finalScore,
+      averageScore: grade.averageScore,
+      status: grade.status
+    })));
+
+    res.status(200).json({ data: allGrades })
   },
 
   restoreTranscript: async (req, res) => {
