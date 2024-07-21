@@ -173,8 +173,7 @@ module.exports = {
       presentAddress: data.presentAddress,
       permanentAddress: data.permanentAddress
     }
-    user.firstName = data.firstName
-    user.lastName = data.lastName
+    user.fullname = data.fullname
     user.address = data.address
     user.email = data.email
     user.dob = data.dob
@@ -183,17 +182,6 @@ module.exports = {
     // user.class = data.class
     // user.majorId = data.majorId
     await user.save();
-
-    // Nếu cần cập nhật danh sách sinh viên trong chuyên ngành cũ và mới
-    // if (oldStudent.majorId.toString() !== data.majorId) {
-    //   // Xóa sinh viên khỏi chuyên ngành cũ
-
-    //   console.log("majorId cũ", oldStudent.majorId);
-    //   await MajorModel.findByIdAndUpdate(oldStudent.majorId, { $pull: { students: id } });
-
-    //   // Thêm sinh viên vào chuyên ngành mới
-    //   await MajorModel.findByIdAndUpdate(data.majorId, { $push: { students: id } });
-    // }
 
     const { password, ...rest } = user._doc
     res.status(200).json({ message: 'Update success', data: rest })
@@ -284,7 +272,8 @@ module.exports = {
       ],
       deleted: false,
       isAdmin: false,
-    })
+    }).collation({ locale: 'vi', strength: 1})
+    
     if (!students) {
       throw new NotFoundError('No students found');
     }

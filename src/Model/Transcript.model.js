@@ -15,7 +15,6 @@ const TranscriptSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Grade'
   }],
-
   deleted: {
     type: Boolean,
     default: false,

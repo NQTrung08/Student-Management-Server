@@ -10,9 +10,6 @@ module.exports = {
   getAllGrades: async (req, res) => {
     const grades = await Grade.find()
       .populate({
-        path: 'student',
-      })
-      .populate({
         path: 'course',
       })
       // .populate({
@@ -31,9 +28,6 @@ module.exports = {
     const id = req.params.id;
 
     const grade = await Grade.findById(id)
-      .populate({
-        path: 'student',
-      })
       .populate({
         path: 'course',
 
@@ -131,40 +125,4 @@ module.exports = {
 
     res.status(200).json({ message: "Grade deleted successfully" });
   },
-
-  // getAllSubjectForStudent: async (req, res) => {
-  //   const studentId = req.params.id;
-
-  //   const grades = await Grade.find({ studentId })
-  //    .populate({
-  //       path: 'course',
-  //     })
-  //    .populate({
-  //       path:'semester',
-  //     })
-
-  //   if (!grades) {
-  //     throw new NotFoundError('No grades found for this student')
-  //   }
-
-  //   res.status(200).json({ grades });
-  // },
-
-  // getGradeInSemester: async(req, res) => {
-  //   const { studentId, semesterId } = req.params;
-
-  //   const grades = await Grade.find({ studentId, semesterId })
-  //    .populate({
-  //       path: 'course',
-  //     })
-
-  //   if (!grades) {
-  //     throw new NotFoundError('No grades found for this student in this semester')
-  //   }
-
-  //   res.status(200).json({ grades });
-  // }
-
-
-
 }
