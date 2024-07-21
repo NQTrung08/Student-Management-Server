@@ -13,7 +13,7 @@ router.post('/create', middleWareController.verifyTokenIsAdminOrGV, asyncHandler
 router.put('/update/:id', middleWareController.verifyTokenIsAdminOrGV, asyncHandler(TranscriptController.updateTranscript))
 router.delete('/delete/:id', middleWareController.verifyTokenIsAdminOrGV, asyncHandler(TranscriptController.deleteTranscript))
 router.put('/restore', middleWareController.verifyTokenIsAdminOrGV, asyncHandler(TranscriptController.restoreTranscript))
-
+router.post('/search', middleWareController.verifyTokenIsAdminOrGV, asyncHandler(TranscriptController.searchTranscripts))
 
 router.get('/student/:studentId/semester/:semesterId', middleWareController.verifyToken, asyncHandler(TranscriptController.getTranscriptBySemester))
 router.get('/student/:studentId', middleWareController.verifyToken, asyncHandler(TranscriptController.getTranscriptByStudent))
