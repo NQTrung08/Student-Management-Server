@@ -232,31 +232,48 @@ const TranscriptController = {
   },
 
   searchTranscripts: async (req, res) => {
-    const { keyword } = req.query;
-    const transcripts = await Transcript.find({
+    let { keyword } = req.query;
+    keyword = keyword.trim();
+
+    // tìm các user phù hợp với keyword
+    const users = await User.find({
       $or: [
         { msv: { $regex: keyword, $options: 'i' } },
         { fullname: { $regex: keyword, $options: 'i' } },
       ],
       deleted: false,
-     })
+      isAdmin: false
+    }).select('_id');
+
+
+    // tìm các transcript phù h��p với keyword trong các user
+    const transcriptIds = users.map(user => user._id);
+    
+    const transcriptsByStudent = await Transcript.find({
+      student: { $in: transcriptIds },
+      deleted: false,
+    })
      .populate({
-        path:'student',
+        path: 'grades',
         populate: {
-          path:'majorId',
+          path: 'course',
           select: 'name'
-        }
+        },
+        select: 'course midScore finalScore averageScore status'
       })
      .populate({
         path:'semester'
       })
+      .populate({
+        path:'student',
+      })
      .exec();
 
-    if (!transcripts) {
+    if (!transcriptsByStudent) {
       throw new NotFoundError('No transcript found');
     }
 
-    res.status(200).json({ data: transcripts });
+    res.status(200).json({ data: transcriptsByStudent });
   },
 
 }
