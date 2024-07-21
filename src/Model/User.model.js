@@ -29,33 +29,6 @@ const User = new Schema({
   country: String,
   address: String,
   class: String,
-  courses: [
-    {
-      course: {
-        type: Schema.Types.ObjectId,
-        ref: "Course"
-      },
-      score: {
-        type: Number
-      }
-    }
-  ],
-  semesters: [
-    {
-      semester: {
-        type: Schema.Types.ObjectId,
-        ref: "Semester"
-      },
-      courses: [
-        {
-          course: {
-            type: Schema.Types.ObjectId,
-            ref: "Course"
-          }
-        }
-      ]
-    }
-  ],
   parent: {
     fatherName: String,
     motherName: String,

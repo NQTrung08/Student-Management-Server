@@ -22,6 +22,7 @@ module.exports = {
     }
     res.status(200).json({ data: major })
   },
+  
   createMajor: async (req, res, next) => {
     const { name, code } = req.body;
     if(!name || !code) {
