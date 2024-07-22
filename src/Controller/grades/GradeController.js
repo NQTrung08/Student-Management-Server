@@ -99,7 +99,10 @@ module.exports = {
     const { gradeId } = req.params;
     const { midScore, finalScore } = req.body;
 
-    const updateGrade = Grade.findByIdAndUpdate( gradeId, { midScore, finalScore }, { new: true })
+    console.log(midScore);
+    console.log(finalScore);
+
+    const updateGrade = await Grade.findByIdAndUpdate( gradeId, { midScore, finalScore }, { new: true })
 
     if (!updateGrade) {
       throw new NotFoundError("Grade not found")

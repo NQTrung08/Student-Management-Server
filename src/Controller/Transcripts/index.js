@@ -140,7 +140,7 @@ const TranscriptController = {
         path: 'grades',
         populate: {
           path: 'course',
-          select: 'name'
+          select: 'code name credit'
         },
         select: 'course midScore finalScore averageScore status'
       })
@@ -155,7 +155,10 @@ const TranscriptController = {
 
     // Tổ chức dữ liệu lại cho frontend
     const allGrades = transcripts.flatMap(transcript => transcript.grades.map(grade => ({
-      course: grade.course.name,
+      gradeId: grade._id,
+      courseCode: grade.course.code,
+      courseName: grade.course.name,
+      credit: grade.course.credit,
       midScore: grade.midScore,
       finalScore: grade.finalScore,
       averageScore: grade.averageScore,
@@ -191,7 +194,7 @@ const TranscriptController = {
         path: 'grades',
         populate: {
           path: 'course',
-          select: 'name'
+          select: 'code name credit'
         }
       })
       .exec()
@@ -202,7 +205,10 @@ const TranscriptController = {
 
     // Tổ chức dữ liệu lại cho frontend
     const allGrades = transcripts.flatMap(transcript => transcript.grades.map(grade => ({
-      course: grade.course.name,
+      gradeId: grade._id,
+      courseCode: grade.course.code,
+      courseName: grade.course.name,
+      credit: grade.course.credit,
       midScore: grade.midScore,
       finalScore: grade.finalScore,
       averageScore: grade.averageScore,
