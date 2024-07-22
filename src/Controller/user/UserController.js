@@ -256,36 +256,6 @@ module.exports = {
     }
   },
 
-  // searchStudents: async (req, res) => {
-  //   const { keyword } = req.query;
-
-  //   console.log(`Searching ${keyword} `)
-
-  //   const students = await User.find({
-  //     $or: [
-  //       { msv: { $regex: keyword, $options: 'i' } },
-  //       { fullname: { $regex: keyword, $options: 'i' } },
-  //       { email: { $regex: keyword, $options: 'i' } },
-  //       { phone: { $regex: keyword, $options: 'i' } },
-  //       { class: { $regex: keyword, $options: 'i' } },
-  //     ],
-  //     deleted: false,
-  //     isAdmin: false,
-  //   })
-  //     .populate({
-  //       path: 'majorId',
-  //       select: 'name',
-  //       match: { name: { $regex: keyword, $options: 'i' } }
-  //     })
-  //     .collation({ locale: 'vi', strength: 1 })
-
-  //   if (!students) {
-  //     throw new NotFoundError('No students found');
-  //   }
-  //   res.status(200).json({ data: students });
-
-  // },
-
   searchStudents: async (req, res) => {
     let { keyword } = req.query;
     
