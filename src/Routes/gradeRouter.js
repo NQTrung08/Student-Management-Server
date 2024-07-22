@@ -11,8 +11,8 @@ router.post('/create', middlewareControler.verifyTokenIsAdminOrGV, asyncHandler(
 router.put('/update/:gradeId', middlewareControler.verifyTokenIsAdminOrGV, asyncHandler(GradeController.updateGrade))
 router.delete('/delete/:gradeId', middlewareControler.verifyTokenIsAdminOrGV, asyncHandler(GradeController.deleteGrade))
 
-router.get('/students/:studentId', middlewareControler.verifyToken, asyncHandler(GradeController.getGradeAllSubjects))
-router.get('/students/:studentId/semesters/:semesterId', middlewareControler.verifyToken, asyncHandler(GradeController.getGradeInSemester))
-
+// router.get('/students/:studentId', middlewareControler.verifyToken, asyncHandler(GradeController.getGradeAllSubjects))
+// router.get('/students/:studentId/semesters/:semesterId', middlewareControler.verifyToken, asyncHandler(GradeController.getGradeInSemester))
+router.get('/transcript/:transcriptId', middlewareControler.verifyToken, asyncHandler(GradeController.getGradesByTranscript))
 
 module.exports = router

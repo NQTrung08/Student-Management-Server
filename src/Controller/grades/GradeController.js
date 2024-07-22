@@ -128,4 +128,21 @@ module.exports = {
 
     res.status(200).json({ message: "Grade deleted successfully" });
   },
+
+  getGradesByTranscript: async (req, res) => {
+    const { transcriptId } = req.params;
+
+    const grades = await Grade.find({ transcript: transcriptId })
+     .populate({
+        path: 'course',
+      })
+
+    if (!grades) {
+      throw new NotFoundError('No grade found for this transcript')
+    }
+
+    res.status(200).json({ data: grades });
+  },
+
+
 }
