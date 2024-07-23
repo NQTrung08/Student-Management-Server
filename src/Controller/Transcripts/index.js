@@ -204,18 +204,40 @@ const TranscriptController = {
     }
 
     // Tổ chức dữ liệu lại cho frontend
-    const allGrades = transcripts.flatMap(transcript => transcript.grades.map(grade => ({
-      gradeId: grade._id,
-      courseCode: grade.course.code,
-      courseName: grade.course.name,
-      credit: grade.course.credit,
-      midScore: grade.midScore,
-      finalScore: grade.finalScore,
-      averageScore: grade.averageScore,
-      status: grade.status
-    })));
+    //   const allGrades = transcripts.flatMap(transcript => transcript.grades.map(grade => ({
+    //     gradeId: grade._id,
+    //     courseCode: grade.course.code,
+    //     courseName: grade.course.name,
+    //     credit: grade.course.credit,
+    //     midScore: grade.midScore,
+    //     finalScore: grade.finalScore,
+    //     averageScore: grade.averageScore,
+    //     status: grade.status
+    //   })));
 
-    res.status(200).json({ data: allGrades })
+    //   res.status(200).json({
+    //     transcriptId: transcripts._id,
+    //     grades: allGrades
+    // });
+
+
+
+    // Tổ chức dữ liệu lại cho frontend
+    const result = transcripts.map(transcript => ({
+      _id: transcript._id,
+      grades: transcript.grades.map(grade => ({
+        gradeId: grade._id,
+        courseCode: grade.course.code,
+        courseName: grade.course.name,
+        credit: grade.course.credit,
+        midScore: grade.midScore,
+        finalScore: grade.finalScore,
+        averageScore: grade.averageScore,
+        status: grade.status,
+      })),
+    }));
+
+    res.status(200).json({ data: result })
   },
 
   restoreTranscript: async (req, res) => {
@@ -254,12 +276,12 @@ const TranscriptController = {
 
     // tìm các transcript phù h��p với keyword trong các user
     const transcriptIds = users.map(user => user._id);
-    
+
     const transcriptsByStudent = await Transcript.find({
       student: { $in: transcriptIds },
       deleted: false,
     })
-     .populate({
+      .populate({
         path: 'grades',
         populate: {
           path: 'course',
@@ -267,13 +289,13 @@ const TranscriptController = {
         },
         select: 'course midScore finalScore averageScore status'
       })
-     .populate({
-        path:'semester'
+      .populate({
+        path: 'semester'
       })
       .populate({
-        path:'student',
+        path: 'student',
       })
-     .exec();
+      .exec();
 
     if (!transcriptsByStudent) {
       throw new NotFoundError('No transcript found');
