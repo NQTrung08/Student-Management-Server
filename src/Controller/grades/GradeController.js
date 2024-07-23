@@ -12,9 +12,9 @@ module.exports = {
       .populate({
         path: 'course',
       })
-      // .populate({
-      //   path: 'semester',
-      // })
+    // .populate({
+    //   path: 'semester',
+    // })
 
     console.log(grades);
 
@@ -70,7 +70,7 @@ module.exports = {
       throw new NotFoundError('Course not found')
     }
 
-    const existCourse = await Grade.findOne({course: courseId, transcript: transcriptId})
+    const existCourse = await Grade.findOne({ course: courseId, transcript: transcriptId })
     if (existCourse) {
       throw new BadRequestError('Grade already exists for this course')
     }
@@ -87,8 +87,8 @@ module.exports = {
     transcript.grades.push(newGrade._id);
     await transcript.save();
 
-   
-    res.status(201).json({message: "Create successfully ", data: newGrade});
+
+    res.status(201).json({ message: "Create successfully ", data: newGrade });
 
 
 
@@ -102,13 +102,19 @@ module.exports = {
     console.log(midScore);
     console.log(finalScore);
 
-    const updateGrade = await Grade.findByIdAndUpdate( gradeId, { midScore, finalScore }, { new: true })
+    const grade = await Grade.findById(gradeId)
 
-    if (!updateGrade) {
+
+    if (!grade) {
       throw new NotFoundError("Grade not found")
     }
 
-    res.status(201).json(updateGrade);
+    grade.midScore = midScore;
+    grade.finalScore = finalScore;
+
+    await grade.save();
+
+    res.status(201).json(grade);
   },
 
   deleteGrade: async (req, res) => {
@@ -133,7 +139,7 @@ module.exports = {
     const { transcriptId } = req.params;
 
     const grades = await Grade.find({ transcript: transcriptId })
-     .populate({
+      .populate({
         path: 'course',
       })
 

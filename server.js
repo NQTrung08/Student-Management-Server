@@ -46,6 +46,7 @@ app.use((error, req, res, next) => {
   
 });
 
+// connect database
 connect();
 
 const port = process.env.PORT;
