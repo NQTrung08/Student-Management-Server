@@ -104,7 +104,7 @@ const TranscriptController = {
 
     const transcript = await Transcript.findByIdAndUpdate(
       id,
-      { student: studentId, student: semesterId },
+      { student: studentId, semester: semesterId },
       { new: true }
     )
 

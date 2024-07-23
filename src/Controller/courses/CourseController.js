@@ -6,17 +6,13 @@ import { BadRequestError, ConflictError, NotFoundError } from '../../core/error.
 module.exports = {
   getAllCourse: async (req, res) => {
     const courses = await Course.find({}).populate('majorId')
-
-
-    // const _courses = courses.filter(item => !item?.deleted);
-    // console.log(courses);
     res.status(200).json({ message: "Success", data: courses })
   },
 
   getCourse: async (req, res) => {
     const id = req.params.id
     const course = await Course.findById(id)
-    if (!course || course?.deleted) {
+    if (!course) {
       throw new BadRequestError('Course not found')
     }
     return res.status(200).json({ message: "Success", data: course })
