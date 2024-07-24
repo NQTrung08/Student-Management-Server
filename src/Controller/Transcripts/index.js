@@ -275,10 +275,10 @@ const TranscriptController = {
 
 
     // tìm các transcript phù h��p với keyword trong các user
-    const transcriptIds = users.map(user => user._id);
+    const userIds = users.map(user => user._id);
 
     const transcriptsByStudent = await Transcript.find({
-      student: { $in: transcriptIds },
+      student: { $in: userIds },
       deleted: false,
     })
       .populate({
