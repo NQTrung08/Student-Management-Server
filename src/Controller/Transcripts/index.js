@@ -36,7 +36,7 @@ const TranscriptController = {
       })
       .populate({
         path: 'student',
-        select: 'fullname'
+        select: 'fullname msv'
       })
 
 

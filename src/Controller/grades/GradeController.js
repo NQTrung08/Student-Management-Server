@@ -114,7 +114,7 @@ module.exports = {
 
     await grade.save();
 
-    res.status(201).json(grade);
+    res.status(201).json({message: 'Update successfully' , data: grade});
   },
 
   deleteGrade: async (req, res) => {
