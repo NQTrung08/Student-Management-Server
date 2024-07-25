@@ -165,9 +165,20 @@ const TranscriptController = {
       status: grade.status
     })));
 
+    // Lọc các môn học trùng lặp, giữ lại môn có điểm cao nhất hoặc kỳ học gần nhất
+    const uniqueGrades = allGrades.reduce((acc, current) => {
+      const found = acc.find(item => item.courseCode === current.courseCode);
+      console.log(found);
+      if (!found) {
+        acc.push(current);
+      } else if (current.averageScore > found.averageScore) {
+        acc = acc.filter(item => item.courseCode !== current.courseCode);
+        acc.push(current);
+      }
+      return acc;
+    }, []);
 
-
-    res.status(200).json({ data: allGrades })
+    res.status(200).json({ data: uniqueGrades })
   },
 
   // lấy bảng điểm theo từng kỳ

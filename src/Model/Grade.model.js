@@ -50,7 +50,7 @@ const GradeSchema = new Schema({
 });
 
 GradeSchema.pre('save', function(next) {
-  this.averageScore = this.midScore * 0.3 + this.finalScore * 0.7;
+  this.averageScore = parseFloat(this.midScore * 0.3 + this.finalScore * 0.7).toFixed(2);
   this.status = this.averageScore >= 4.0 ? 'Pass' : 'Fail';
   next();
 });
