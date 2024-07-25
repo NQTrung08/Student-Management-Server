@@ -28,12 +28,19 @@ module.exports = {
     if(!name || !code) {
       throw new BadRequestError('Please fill name and code')
     }
+    const validMajor = await MajorModel.findOne({ code })
+
+    if(validMajor) {
+      throw new BadRequestError('Major already exists')
+    }
 
     const newMajor = await MajorModel.create({
       name, code
     })
     res.status(200).json({ message: "Create success", data: newMajor })
   },
+
+
   updateMajor: async (req, res, next) => {
     const { id } = req.params;
     const { name, code } = req.body;
@@ -43,6 +50,8 @@ module.exports = {
     }
     res.status(200).json({ message: "Update success", data: major })
   },
+
+  
   deleteMajor: async (req, res, next) => {
     const { id } = req.params;
     const major = await MajorModel.findByIdAndDelete(id)

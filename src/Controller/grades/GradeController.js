@@ -51,6 +51,7 @@ module.exports = {
   createGrade: async (req, res) => {
     const { courseId, midScore, finalScore, transcriptId } = req.body;
 
+    console.log("courseId::", courseId);
 
     if (midScore < 0 || midScore > 10) {
       throw new Error('Invalid midScore, value between 0 and 10');
@@ -72,13 +73,7 @@ module.exports = {
 
     const existCourse = await Grade.findOne({ course: courseId, transcript: transcriptId })
     if (existCourse) {
-      throw new BadRequestError('Grade already exists for this course')
-    }
-
-    const existingGrade = await Grade.findOne({ courseId });
-
-    if (existingGrade) {
-      throw new BadRequestError('Grade already exists for this semester')
+      throw new BadRequestError('Grade of course already exists for semester')
     }
 
     const newGrade = await Grade.create({ course: courseId, midScore, finalScore, transcript: transcriptId });

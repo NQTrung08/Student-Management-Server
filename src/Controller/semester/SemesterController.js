@@ -17,6 +17,13 @@ const SemesterControler = {
   },
   createSemester: async (req, res, next) => {
     const { semester, group, year } = req.body;
+    if (!semester ||!group ||!year) {
+      throw new BadRequestError('Please fill semester, group and year')
+    }
+    const validSemester = await Semester.findOne({ semester, group, year })
+    if (validSemester) {
+      throw new BadRequestError('Semester already exists')
+    }
     const newSemes = await Semester.create({
       semester, group, year
     })
