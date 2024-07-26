@@ -27,14 +27,19 @@ const AuthController = {
 
       console.log('Decoded token:', decoded);
 
+      const user = decoded;
+
       // Tạo mới access token
       const newAccessToken = generateTokens.generateAccessToken(decoded);
+
 
       res.status(200).json({
         tokens: {
           accessToken: newAccessToken,
           refreshToken: refreshToken,
         },
+        data: user
+
       });
     });
   },
@@ -111,7 +116,19 @@ const AuthController = {
     if (!refreshToken) return res.status(400).json({ message: 'No refresh token provided' });
     res.status(200).json({ message: 'Successfully logged out' });
 
-  }
+  },
+
+  validateToken: async (req, res) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) return res.status(400).json({ message: 'No token provided' });
+    
+    jwt.verify(token, process.env.JWT_ACCESS_KEY, (err, decoded) => {
+      if (err) return res.status(403).json({ message: 'Invalid token' });
+      res.status(200).json({ message: 'Token is valid' });
+    });
+  },
 }
 
 module.exports = AuthController;

@@ -1,5 +1,5 @@
 const Semester = require("../../Model/Semester.model");
-const { NotFoundError } = require("../../core/error.response");
+const { NotFoundError, BadRequestError } = require("../../core/error.response");
 
 const SemesterControler = {
   getAll: async (req, res) => {
@@ -21,6 +21,9 @@ const SemesterControler = {
       throw new BadRequestError('Please fill semester, group and year')
     }
     const validSemester = await Semester.findOne({ semester, group, year })
+
+    console.log(validSemester);
+
     if (validSemester) {
       throw new BadRequestError('Semester already exists')
     }

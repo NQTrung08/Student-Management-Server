@@ -9,6 +9,7 @@ const { asyncHandler } = require('../../Utils/asyncHandler')
 
 router.post('/login', asyncHandler(AuthController.login))
 router.post('/refresh', asyncHandler(AuthController.requestRefreshToken));
+router.get('/validateToken', asyncHandler(AuthController.validateToken));
 
 // router.post('/change-password', middlewareControler.verifyToken, AuthControler.changePassword)
 

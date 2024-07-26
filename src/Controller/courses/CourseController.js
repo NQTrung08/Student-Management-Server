@@ -21,14 +21,16 @@ module.exports = {
 
   createCourse: async (req, res) => {
     const { name, code, credit, majorId } = req.body
-    const validCourse = await Course.findOne({ name })
-    if (validCourse) {
-      throw new BadRequestError('Course already exists')
-    }
 
     if (!name || !code || !credit || !majorId) {
       throw new BadRequestError('Please fill name, code, credit and majorId')
     }
+    
+    const validCourse = await Course.findOne({ code: code })
+    if (validCourse) {
+      throw new BadRequestError('Course already exists')
+    }
+
 
     let newCourse = await Course.create({
       deleted: false,
