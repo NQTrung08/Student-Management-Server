@@ -5,7 +5,7 @@ const mongoUrlOnline = process.env.MONGO_URL_ONLINE;
 console.log(mongoUrlOnline)
 const mongoUrlOffline = process.env.MONGO_URL_OFFLINE;
 
-const mongoUrl = process.env.USE_ONLINE_DB === 'true' ? mongoUrlOnline : mongoUrlOffline;
+const mongoUrl = process.env.MONGO_URL_ONLINE || 'mongodb://localhost:27017/studentManagement';
 
 const connect = () => {
     mongoose.connect(mongoUrl, {
