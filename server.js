@@ -16,16 +16,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-import { OAuth2Client } from "google-auth-library";
-export const myOAuth2Client = new OAuth2Client(
-	process.env.GOOGLE_MAILER_CLIENT_ID,
-	process.env.GOOGLE_MAILER_CLIENT_SECRET
-);
-// Set Refresh Token vào OAuth2Client Credentials
-myOAuth2Client.setCredentials({
-	refresh_token: process.env.GOOGLE_MAILER_REFRESH_TOKEN,
-});
-
+// init router
 initRoute(app);
 
 // handle error
