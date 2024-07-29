@@ -1,20 +1,30 @@
-const mongoose = require('mongoose')
-require('dotenv').config()
+const mongoose = require('mongoose');
+require('dotenv').config();
 
+// Lấy URL kết nối MongoDB từ biến môi trường
 const mongoUrlOnline = process.env.MONGO_URL_ONLINE;
-console.log(mongoUrlOnline)
 const mongoUrlOffline = process.env.MONGO_URL_OFFLINE;
 
-const mongoUrl = process.env.MONGO_URL_ONLINE || 'mongodb://localhost:27017/studentManagement';
+// Hàm kết nối tới MongoDB
+const connect = async () => {
+    try {
+        // Cố gắng kết nối với URL online trước
+        await mongoose.connect(mongoUrlOnline);
+        console.log('Connected to MongoDB online successfully');
+    } catch (err) {
+        console.error('Failed to connect to MongoDB online:', err);
+        console.log('Switching to offline MongoDB URL...');
 
-const connect = () => {
-    mongoose.connect(mongoUrl, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
+        try {
+            // Nếu kết nối online thất bại, cố gắng kết nối với URL offline
+            await mongoose.connect(mongoUrlOffline);
+            console.log('Connected to MongoDB offline successfully');
+        } catch (offlineErr) {
+            console.error('Failed to connect to MongoDB offline:', offlineErr);
+            process.exit(1); // Kết thúc ứng dụng nếu không thể kết nối
+        }
+    }
+};
 
-    })
-        .then(() => console.log('connect db sucess'))
-        .catch((err) => console.log('connect err', err))
-}
-
-module.exports = connect
+// Xuất hàm kết nối
+module.exports = connect;
