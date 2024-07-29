@@ -1,7 +1,8 @@
-import User from '@/Model/User.model'
-import Teacher from '@/Model/Teacher.model'
-import Semester from '../../Model/Semester.model';
-const Course = require('@/Model/Course.model')
+const User = require('../../Model/User.model')
+const Teacher = require('../../Model/Teacher.model')
+const Semester = require('../../Model/Semester.model')
+const Course = require('../../Model/Course.model')
+
 module.exports = {
   register: async (req, res) => {
     const { classId, semesterId } = req.body;

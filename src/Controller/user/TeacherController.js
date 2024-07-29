@@ -1,5 +1,5 @@
-import Teacher from "../../Model/Teacher.model";
-import { NotFoundError } from "../../core/error.response";
+const Teacher = require("../../Model/Teacher.model");
+const { NotFoundError } = require("../../core/error.response");
 const Encrypt = require('../../Utils/encryption');
 
 

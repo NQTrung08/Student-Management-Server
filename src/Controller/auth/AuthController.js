@@ -5,9 +5,9 @@ const Encrypt = require('../../Utils/encryption')
 
 const { ForbiddenError, ConflictError, BadRequestError } = require('../../core/error.response')
 
-import Teacher from '../../Model/Teacher.model'
-import sendEmail from '../../Utils/sendEmail'
-import { generateRandomPassword } from '../../Utils/randomPassword'
+const Teacher = require('../../Model/Teacher.model')
+// const sendEmail = require('../../Utils/sendEmail')
+// const { generateRandomPassword } = require('../../Utils/randomPassword')
 
 
 const AuthController = {
@@ -92,24 +92,24 @@ const AuthController = {
     }
   },
 
-  resetPassword: async (req, res) => {
-    const { msv } = req.body
-    try {
-      const user = await User.findOne({ msv: msv });
-      if (!user) {
-        res.status(404).json({ message: "user not exist" })
-        return;
-      }
-      const newPassword = generateRandomPassword(8);
-      const hashPassword = await Encrypt.cryptPassword(newPassword)
-      user.password = hashPassword;
-      user.save();
-      sendEmail(user?.email, 'Reset Password', newPassword, req, res);
-    } catch (e) {
-      console.log(e)
-      return res.status(500).json(e)
-    }
-  },
+  // resetPassword: async (req, res) => {
+  //   const { msv } = req.body
+  //   try {
+  //     const user = await User.findOne({ msv: msv });
+  //     if (!user) {
+  //       res.status(404).json({ message: "user not exist" })
+  //       return;
+  //     }
+  //     const newPassword = generateRandomPassword(8);
+  //     const hashPassword = await Encrypt.cryptPassword(newPassword)
+  //     user.password = hashPassword;
+  //     user.save();
+  //     sendEmail(user?.email, 'Reset Password', newPassword, req, res);
+  //   } catch (e) {
+  //     console.log(e)
+  //     return res.status(500).json(e)
+  //   }
+  // },
 
   logout: async (req, res) => {
     const { refreshToken } = req.body;

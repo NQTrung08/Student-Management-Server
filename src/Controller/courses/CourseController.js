@@ -2,7 +2,8 @@ const Course = require('../../Model/Course.model')
 const Encrypt = require('../../Utils/encryption')
 const MajorModel = require('../../Model/Major.model')
 
-import { BadRequestError, ConflictError, NotFoundError } from '../../core/error.response'
+const { BadRequestError, ConflictError, NotFoundError } = require('../../core/error.response')
+
 module.exports = {
   getAllCourse: async (req, res) => {
     const courses = await Course.find({}).populate('majorId')
