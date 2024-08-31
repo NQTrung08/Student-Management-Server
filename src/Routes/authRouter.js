@@ -27,7 +27,7 @@ const { asyncHandler } = require('../Utils/asyncHandler')
 
 /**
  * @swagger
- * /login:
+ * /auth/login:
  *   post:
  *     tags:
  *       - Auth
