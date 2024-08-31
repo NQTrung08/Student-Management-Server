@@ -1,4 +1,4 @@
-const AuthRouter = require('./auth/authRouter')
+const AuthRouter = require('./authRouter')
 const UserRouter = require('./userRouter')
 const CourseRouter = require('./courseRouter')
 const SemesterRouter = require('./semesterRouter')

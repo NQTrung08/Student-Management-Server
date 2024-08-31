@@ -16,6 +16,9 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Import Swagger configuration
+require('./src/Config/swagger/index')(app);
+
 // init router
 initRoute(app);
 
@@ -44,4 +47,5 @@ const port = process.env.PORT;
 app.listen(port, (err) => {
 	if (err) console.log(err);
 	console.log(`Server listening in port ${port}`);
+	console.log(`API DOCUMENTS running in  http://localhost:${port}/api-docs`);
 });
