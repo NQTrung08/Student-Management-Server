@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "build": "babel server.js",
-    "start": "nodemon --exec babel-node server.js"
+    "dev": "cross-env NODE_ENV=dev nodemon",
+    "start": "cross-env NODE_ENV=pro nodemon --exec babel-node server.js"
   },
   "author": "",
   "license": "ISC",
@@ -26,6 +27,7 @@
     "@babel/node": "^7.22.19",
     "@babel/preset-env": "^7.23.8",
     "babel-plugin-module-resolver": "^5.0.0",
+    "cross-env": "^7.0.3",
     "nodemon": "^3.0.2",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"

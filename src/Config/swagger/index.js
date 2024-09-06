@@ -2,6 +2,7 @@ const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const path = require('path');
 const port = process.env.PORT;
+const {app: {url}} = require('../app/index')
 
 // Cấu hình Swagger
 const swaggerDefinition = {
@@ -13,7 +14,7 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: `http://localhost:${port}/api`, // URL của server
+      url: `${url}/api`, // URL của server
     },
   ],
 };

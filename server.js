@@ -1,9 +1,11 @@
 const express = require("express");
 const cors = require("cors");
+const dotenv = require('dotenv');
 const initRoute = require("./src/Routes");
 const connect = require("./src/Config/db/index");
 const cookieParser = require("cookie-parser");
-require("dotenv").config();
+dotenv.config();
+const { app: {url}} = require('./src/Config/app/index')
 const app = express();
 app.use(cors({
   origin: "*"
@@ -45,9 +47,9 @@ app.use((error, req, res, next) => {
 // connect database
 connect();
 
-const port = process.env.PORT;
+const port = process.env.DEV_APP_PORT;
 app.listen(port, (err) => {
 	if (err) console.log(err);
-	console.log(`Server listening in port ${port}`);
-	console.log(`API DOCUMENTS running in  http://localhost:${port}/api-docs`);
+	console.log(`Server listening in ${url}`);
+	console.log(`API DOCUMENTS running in  ${url}/api-docs`);
 });
